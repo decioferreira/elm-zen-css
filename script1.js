@@ -2,7 +2,7 @@
 "use strict";
 
 const { spawn } = require('child_process');
-const elm = spawn('elm', ['make', 'src/Main.elm', '--debug', '--output=tmp/elm-css.js']);
+const elm = spawn('elm', ['make', 'src/Converter.elm', '--debug', '--output=tmp/converter.js']);
 
 elm.stdout.on('data', (data) => {
   console.log(`stdout: ${data}`);

@@ -7,7 +7,7 @@ const fs = require("fs");
 const app = Elm.Converter.init();
 
 app.ports.subscriber.subscribe((data) => {
-  fs.writeFileSync("./tmp/Stylesheet.elm", data);
+  fs.writeFileSync("./tmp/StylesheetProd.elm", data);
 });
 
-app.ports.convertToCss.send(fs.readFileSync("./example/src/Stylesheet.elm", "utf8"));
+app.ports.convertToProd.send({ name: ["StylesheetProd"], src: fs.readFileSync("./example/src/Stylesheet.elm", "utf8") });

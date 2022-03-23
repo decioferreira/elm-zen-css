@@ -1,90 +1,138 @@
-port module Main exposing (main)
+port module Converter exposing (convertToCss, convertToProd, main, subscriber)
 
 import Elm.Parser
 import Elm.Processing
-import Elm.Syntax.Declaration as Declaration
+import Elm.Syntax.Declaration as Declaration exposing (Declaration)
 import Elm.Syntax.Exposing as Exposing
-import Elm.Syntax.Expression as Expression
+import Elm.Syntax.Expression as Expression exposing (Expression)
+import Elm.Syntax.Infix as Infix
 import Elm.Syntax.Module as Module
 import Elm.Syntax.Node as Node exposing (Node(..))
 import Elm.Syntax.Pattern as Pattern
 import Elm.Syntax.TypeAnnotation as TypeAnnotation
 import Elm.Writer
+import Result.Extra as Result
 
 
-port sendMessage : String -> Cmd msg
+
+-- PORTS
 
 
-port messageReceiver : (String -> msg) -> Sub msg
+port convertToCss : (String -> msg) -> Sub msg
 
 
-main : Program () () String
+port convertToProd : (ProdData -> msg) -> Sub msg
+
+
+port subscriber : String -> Cmd msg
+
+
+
+-- MAIN
+
+
+main : Program Flags Model Msg
 main =
     Platform.worker
-        { init = \_ -> ( (), Cmd.none )
-        , update = \src model -> ( model, sendMessage (parse src) )
-        , subscriptions = \_ -> messageReceiver identity
+        { init = init
+        , update = update
+        , subscriptions = subscriptions
         }
 
 
-node : a -> Node a
-node =
-    Node
-        { end = { column = 0, row = 0 }
-        , start = { column = 0, row = 0 }
-        }
+type alias Flags =
+    ()
 
 
-parse : String -> String
-parse input =
-    let
-        code =
-            input
-                |> Elm.Parser.parse
-                |> Result.map
-                    (Elm.Processing.process Elm.Processing.init
-                        >> (\file ->
-                                { file
-                                    | moduleDefinition =
-                                        case file.moduleDefinition of
-                                            Node range (Module.NormalModule defaultModuleData) ->
-                                                Node range
-                                                    (Module.PortModule
-                                                        { defaultModuleData
-                                                            | exposingList = node (Exposing.Explicit [ node (Exposing.FunctionExpose "main") ])
-                                                        }
-                                                    )
 
-                                            Node range (Module.PortModule defaultModuleData) ->
-                                                Node range
-                                                    (Module.PortModule
-                                                        { defaultModuleData
-                                                            | exposingList = node (Exposing.Explicit [ node (Exposing.FunctionExpose "main") ])
-                                                        }
-                                                    )
-
-                                            _ ->
-                                                file.moduleDefinition
-                                    , declarations =
-                                        sendMessageDeclaration
-                                            :: messageReceiverDeclaration
-                                            :: mainDeclaration file.declarations
-                                            :: file.declarations
-                                }
-                           )
-                        >> Elm.Writer.writeFile
-                        >> Elm.Writer.write
-                    )
-    in
-    case code of
-        Err e ->
-            Debug.toString e
-
-        Ok v ->
-            v
+-- MODEL
 
 
-sendMessageDeclaration : Node Declaration.Declaration
+type alias Model =
+    ()
+
+
+init : Flags -> ( Model, Cmd Msg )
+init _ =
+    ( (), Cmd.none )
+
+
+
+-- UPDATE
+
+
+type Msg
+    = ConvertToCss String
+    | ConvertToProd ProdData
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        ConvertToCss src ->
+            ( model, subscriber (toCss src) )
+
+        ConvertToProd data ->
+            ( model, subscriber (toProd data) )
+
+
+
+-- SUBSCRIPTIONS
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Sub.batch
+        [ convertToCss ConvertToCss
+        , convertToProd ConvertToProd
+        ]
+
+
+
+-- TO CSS
+
+
+toCss : String -> String
+toCss =
+    Elm.Parser.parse
+        >> Result.map
+            (Elm.Processing.process Elm.Processing.init
+                >> (\file ->
+                        { file
+                            | moduleDefinition =
+                                case file.moduleDefinition of
+                                    Node range (Module.NormalModule defaultModuleData) ->
+                                        Node range
+                                            (Module.PortModule
+                                                { defaultModuleData
+                                                    | exposingList = node (Exposing.Explicit [ node (Exposing.FunctionExpose "main") ])
+                                                }
+                                            )
+
+                                    Node range (Module.PortModule defaultModuleData) ->
+                                        Node range
+                                            (Module.PortModule
+                                                { defaultModuleData
+                                                    | exposingList = node (Exposing.Explicit [ node (Exposing.FunctionExpose "main") ])
+                                                }
+                                            )
+
+                                    _ ->
+                                        file.moduleDefinition
+                            , declarations =
+                                sendMessageDeclaration
+                                    :: messageReceiverDeclaration
+                                    :: mainDeclaration file.declarations
+                                    :: file.declarations
+                        }
+                   )
+                >> Elm.Writer.writeFile
+                >> Elm.Writer.write
+            )
+        >> Result.extract Debug.toString
+
+
+sendMessageDeclaration : Node Declaration
 sendMessageDeclaration =
     node
         (Declaration.PortDeclaration
@@ -99,7 +147,7 @@ sendMessageDeclaration =
         )
 
 
-messageReceiverDeclaration : Node Declaration.Declaration
+messageReceiverDeclaration : Node Declaration
 messageReceiverDeclaration =
     node
         (Declaration.PortDeclaration
@@ -118,7 +166,7 @@ messageReceiverDeclaration =
         )
 
 
-mainDeclaration : List (Node Declaration.Declaration) -> Node Declaration.Declaration
+mainDeclaration : List (Node Declaration) -> Node Declaration
 mainDeclaration declarations =
     let
         classDeclarations =
@@ -241,3 +289,77 @@ mainDeclaration declarations =
                     )
             }
         )
+
+
+
+-- TO PRODUCTION
+
+
+type alias ProdData =
+    { name : List String, src : String }
+
+
+toProd : ProdData -> String
+toProd data =
+    Elm.Parser.parse data.src
+        |> Result.map
+            (Elm.Processing.process Elm.Processing.init
+                >> (\file ->
+                        { file
+                            | moduleDefinition =
+                                case file.moduleDefinition of
+                                    Node range (Module.NormalModule defaultModuleData) ->
+                                        Node range (Module.NormalModule { defaultModuleData | moduleName = node data.name })
+
+                                    Node range (Module.PortModule defaultModuleData) ->
+                                        Node range (Module.PortModule { defaultModuleData | moduleName = node data.name })
+
+                                    Node range (Module.EffectModule effectModuleData) ->
+                                        Node range (Module.EffectModule { effectModuleData | moduleName = node data.name })
+                            , declarations =
+                                file.declarations
+                                    |> List.map
+                                        (\declaration ->
+                                            case declaration of
+                                                Node _ (Declaration.FunctionDeclaration function) ->
+                                                    node
+                                                        (Declaration.FunctionDeclaration
+                                                            { function
+                                                                | declaration =
+                                                                    case function.declaration of
+                                                                        Node _ functionImplementation ->
+                                                                            node { functionImplementation | expression = extractNestedNode functionImplementation.expression }
+                                                            }
+                                                        )
+
+                                                _ ->
+                                                    declaration
+                                        )
+                        }
+                   )
+                >> Elm.Writer.writeFile
+                >> Elm.Writer.write
+            )
+        |> Result.extract Debug.toString
+
+
+
+-- HELPERS
+
+
+node : a -> Node a
+node =
+    Node
+        { end = { column = 0, row = 0 }
+        , start = { column = 0, row = 0 }
+        }
+
+
+extractNestedNode : Node Expression -> Node Expression
+extractNestedNode nodeExpression =
+    case nodeExpression of
+        Node _ (Expression.OperatorApplication "|>" Infix.Left leftNode rightNode) ->
+            extractNestedNode leftNode
+
+        _ ->
+            nodeExpression
