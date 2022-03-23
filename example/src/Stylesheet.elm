@@ -1,16 +1,6 @@
-module Stylesheet exposing (button, main, number)
+module Stylesheet exposing (button, number)
 
 import CSS exposing (CSS)
-import Html exposing (Html)
-
-
-main : Html msg
-main =
-    [ button
-    , number
-    ]
-        |> CSS.toString
-        |> Html.text
 
 
 button : CSS
@@ -18,6 +8,7 @@ button =
     CSS.css "button"
         |> CSS.background "black"
         |> CSS.color "white"
+        |> CSS.custom "border" "none"
 
 
 number : CSS

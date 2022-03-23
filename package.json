@@ -1,0 +1,10 @@
+{
+  "name": "elm-css",
+  "version": "1.0.0",
+  "repository": "git@github.com:decioferreira/elm-css.git",
+  "author": "Decio Ferreira <decio.jferreira@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "elm": "^0.19.1-5"
+  }
+}
