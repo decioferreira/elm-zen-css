@@ -26,4 +26,4 @@ Options:
 
 ## Example
 
-Find more details on the [example directory](example/README.md).
+Find more details on the [example directory](example).
