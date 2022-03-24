@@ -107,21 +107,27 @@ toCss =
                                     Node range (Module.NormalModule defaultModuleData) ->
                                         Node range
                                             (Module.PortModule
-                                                { defaultModuleData
-                                                    | exposingList = node (Exposing.Explicit [ node (Exposing.FunctionExpose "main") ])
+                                                { moduleName = node [ "ExportCss" ]
+                                                , exposingList = node (Exposing.Explicit [ node (Exposing.FunctionExpose "main") ])
                                                 }
                                             )
 
                                     Node range (Module.PortModule defaultModuleData) ->
                                         Node range
                                             (Module.PortModule
-                                                { defaultModuleData
-                                                    | exposingList = node (Exposing.Explicit [ node (Exposing.FunctionExpose "main") ])
+                                                { moduleName = node [ "ExportCss" ]
+                                                , exposingList = node (Exposing.Explicit [ node (Exposing.FunctionExpose "main") ])
                                                 }
                                             )
 
-                                    _ ->
-                                        file.moduleDefinition
+                                    Node range (Module.EffectModule effectModuleData) ->
+                                        Node range
+                                            (Module.EffectModule
+                                                { effectModuleData
+                                                    | moduleName = node [ "ExportCss" ]
+                                                    , exposingList = node (Exposing.Explicit [ node (Exposing.FunctionExpose "main") ])
+                                                }
+                                            )
                             , declarations =
                                 sendMessageDeclaration
                                     :: messageReceiverDeclaration

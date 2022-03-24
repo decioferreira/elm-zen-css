@@ -1,0 +1,12 @@
+{
+  "name": "elm-css-example",
+  "version": "0.0.1",
+  "license": "MIT",
+  "dependencies": {
+    "elm-live": "^4.0.2"
+  },
+  "scripts": {
+    "css": "../cli/index.js stylesheet/Main.elm --watch --css app.css --elm src/Classes.elm",
+    "live": "elm-live src/Main.elm --open -- --output=app.js"
+  }
+}

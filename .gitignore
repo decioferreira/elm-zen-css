@@ -1,4 +1,13 @@
 elm-stuff
-/node_modules
+node_modules
+
+# Cli
+/cli/converter.js
+
+# Converter
 /converter/tmp/**/*
-/converter.js
+
+# Example
+/example/app.css
+/example/app.js
+/example/src/Classes.elm

@@ -2,9 +2,9 @@ module Main exposing (main)
 
 import Browser
 import CSS
+import Classes
 import Html exposing (Html)
 import Html.Events as Events
-import Stylesheet
 
 
 
@@ -60,16 +60,16 @@ view : Model -> Html Msg
 view model =
     Html.div []
         [ Html.button
-            [ CSS.class Stylesheet.button
+            [ CSS.class Classes.button
             , Events.onClick Decrement
             ]
             [ Html.text "-" ]
         , Html.div
-            [ CSS.class Stylesheet.number
+            [ CSS.class Classes.number
             ]
             [ Html.text (String.fromInt model) ]
         , Html.button
-            [ CSS.class Stylesheet.button
+            [ CSS.class Classes.button
             , Events.onClick Increment
             ]
             [ Html.text "+" ]

@@ -1,6 +1,6 @@
 {
   "name": "elm-css",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "repository": "git@github.com:decioferreira/elm-css.git",
   "author": "Decio Ferreira <decio.jferreira@gmail.com>",
   "license": "MIT",
@@ -9,8 +9,8 @@
     "elm": "^0.19.1-5",
     "node-watch": "^0.7.3"
   },
-  "bin": "./cli.js",
+  "bin": "./cli/index.js",
   "scripts": {
-    "prepare": "pushd converter && elm make src/Main.elm --output=../converter.js --optimize && popd"
+    "prepare": "pushd converter && elm make src/Main.elm --output=../cli/converter.js --optimize && popd"
   }
 }

@@ -23,3 +23,7 @@ Options:
   --watch              watch file changes
   -h, --help           display help for command
 ```
+
+## Example
+
+Find more details on the [example directory](example/README.md).

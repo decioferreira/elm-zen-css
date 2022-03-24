@@ -1,4 +1,4 @@
-module Stylesheet exposing (button, number)
+module Main exposing (button, number)
 
 import CSS exposing (CSS)
 
