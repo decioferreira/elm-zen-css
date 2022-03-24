@@ -1,4 +1,4 @@
-port module Converter exposing (convertToCss, convertToProd, main, subscriber)
+port module Main exposing (convertToCss, convertToProd, main, resultCss, resultProd)
 
 import Elm.Parser
 import Elm.Processing
@@ -21,10 +21,13 @@ import Result.Extra as Result
 port convertToCss : (String -> msg) -> Sub msg
 
 
+port resultCss : String -> Cmd msg
+
+
 port convertToProd : (ProdData -> msg) -> Sub msg
 
 
-port subscriber : String -> Cmd msg
+port resultProd : String -> Cmd msg
 
 
 
@@ -70,10 +73,10 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ConvertToCss src ->
-            ( model, subscriber (toCss src) )
+            ( model, resultCss (toCss src) )
 
         ConvertToProd data ->
-            ( model, subscriber (toProd data) )
+            ( model, resultProd (toProd data) )
 
 
 
@@ -129,7 +132,7 @@ toCss =
                 >> Elm.Writer.writeFile
                 >> Elm.Writer.write
             )
-        >> Result.extract Debug.toString
+        >> Result.extract (always "There was an error!")
 
 
 sendMessageDeclaration : Node Declaration
@@ -340,7 +343,7 @@ toProd data =
                 >> Elm.Writer.writeFile
                 >> Elm.Writer.write
             )
-        |> Result.extract Debug.toString
+        |> Result.extract (always "There was an error!")
 
 
 

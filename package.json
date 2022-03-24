@@ -5,6 +5,12 @@
   "author": "Decio Ferreira <decio.jferreira@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "elm": "^0.19.1-5"
+    "commander": "^9.1.0",
+    "elm": "^0.19.1-5",
+    "node-watch": "^0.7.3"
+  },
+  "bin": "./cli.js",
+  "scripts": {
+    "prepare": "pushd converter && elm make src/Main.elm --output=../converter.js --optimize && popd"
   }
 }
