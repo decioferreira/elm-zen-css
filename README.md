@@ -27,3 +27,11 @@ Options:
 ## Example
 
 Find more details on the [example directory](example).
+
+# Development
+
+Start by installing the project dependencies:
+
+```
+yarn
+```

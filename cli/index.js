@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-"use strict";
+'use strict';
 
-const fs = require("fs");
+const fs = require('fs');
 const path = require('path');
 const watch = require('node-watch');
 
@@ -15,7 +15,10 @@ const run = (file, options) => {
   if (options.css) {
     app.ports.resultCss.subscribe((data) => {
       fs.writeFileSync(path.resolve(__dirname, '../converter/tmp/ExportCss.elm'), data);
-      execSync(`pushd ${path.resolve(__dirname, '../converter/')} && elm make tmp/ExportCss.elm --output=tmp/export-css.js --optimize && popd`);
+      execSync(
+        `pushd ${path.resolve(__dirname, '../converter/')} && elm make tmp/ExportCss.elm --output=tmp/export-css.js --optimize && popd`,
+        { shell: '/bin/bash' }
+      );
 
       delete require.cache[require.resolve('../converter/tmp/export-css.js')];
 
@@ -29,7 +32,7 @@ const run = (file, options) => {
       exportCssApp.ports.messageReceiver.send(null);
     });
 
-    app.ports.convertToCss.send(fs.readFileSync(file, "utf8"));
+    app.ports.convertToCss.send(fs.readFileSync(file, 'utf8'));
   }
 
   if (options.elm) {
@@ -39,7 +42,7 @@ const run = (file, options) => {
 
     app.ports.convertToProd.send({
       name: [path.basename(options.elm, path.extname(options.elm))],
-      src: fs.readFileSync(file, "utf8")
+      src: fs.readFileSync(file, 'utf8')
     });
   }
 };

@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "dependencies": {
+    "elm": "^0.19.1-5",
     "elm-live": "^4.0.2"
   },
   "scripts": {
