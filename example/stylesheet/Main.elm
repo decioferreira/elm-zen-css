@@ -13,6 +13,15 @@ color =
 
 
 
+-- CSS Variables
+
+
+buttonPadding : CSS.Variable
+buttonPadding =
+    CSS.variable "button-padding" "10px"
+
+
+
 -- Helpers
 
 
@@ -33,6 +42,7 @@ button =
         |> CSS.background color
         |> CSS.color "white"
         |> CSS.custom "border" "none"
+        |> CSS.custom "padding" (CSS.var buttonPadding)
 
 
 number : CSS.CSS
@@ -40,3 +50,4 @@ number =
     CSS.css "number"
         |> fontStyle
         |> CSS.color color
+        |> CSS.custom "padding" "var(--number-padding, 10px)"

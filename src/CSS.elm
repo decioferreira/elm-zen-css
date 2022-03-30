@@ -2,6 +2,7 @@ module CSS exposing
     ( CSS, css, toString
     , class
     , custom, background, color
+    , Variable, variable, var
     )
 
 {-|
@@ -20,6 +21,11 @@ module CSS exposing
 # Properties
 
 @docs custom, background, color
+
+
+# Variables
+
+@docs Variable, variable, var
 
 -}
 
@@ -40,20 +46,37 @@ css className =
     CSS className []
 
 
-toString : List CSS -> String
-toString =
-    List.map
-        (\(CSS className properties) ->
-            "."
-                ++ className
-                ++ " {"
-                ++ (properties
-                        |> List.map propertyToString
+toString : List Variable -> List CSS -> String
+toString variables classes =
+    (case variables of
+        [] ->
+            ""
+
+        _ ->
+            ":root {"
+                ++ (List.map
+                        (\(Variable name value) ->
+                            "--" ++ name ++ ": " ++ value
+                        )
+                        variables
                         |> String.join "; "
                    )
-                ++ "}"
-        )
-        >> String.join "\n"
+                ++ "}\n"
+    )
+        ++ (List.map
+                (\(CSS className properties) ->
+                    "."
+                        ++ className
+                        ++ " {"
+                        ++ (properties
+                                |> List.map propertyToString
+                                |> String.join "; "
+                           )
+                        ++ "}"
+                )
+                classes
+                |> String.join "\n"
+           )
 
 
 propertyToString : ( String, String ) -> String
@@ -87,3 +110,21 @@ background value (CSS className properties) =
 color : String -> CSS -> CSS
 color value (CSS className properties) =
     CSS className (( "color", value ) :: properties)
+
+
+
+-- Variables
+
+
+type Variable
+    = Variable String String
+
+
+variable : String -> String -> Variable
+variable =
+    Variable
+
+
+var : Variable -> String
+var (Variable name _) =
+    "var(--" ++ name ++ ")"

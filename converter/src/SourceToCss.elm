@@ -89,6 +89,31 @@ messageReceiverDeclaration =
 mainDeclaration : List (Node Declaration) -> Node Declaration
 mainDeclaration declarations =
     let
+        cssVariableDeclarations =
+            List.filterMap
+                (\declaration ->
+                    case declaration of
+                        Node _ (Declaration.FunctionDeclaration functionDeclaration) ->
+                            case functionDeclaration.signature of
+                                Just (Node _ signature) ->
+                                    case signature.typeAnnotation of
+                                        Node _ (TypeAnnotation.Typed (Node _ ( [], "Variable" )) []) ->
+                                            Just (declarationHelper functionDeclaration)
+
+                                        Node _ (TypeAnnotation.Typed (Node _ ( [ "CSS" ], "Variable" )) []) ->
+                                            Just (declarationHelper functionDeclaration)
+
+                                        _ ->
+                                            Nothing
+
+                                _ ->
+                                    Nothing
+
+                        _ ->
+                            Nothing
+                )
+                declarations
+
         classDeclarations =
             List.filterMap
                 (\declaration ->
@@ -98,10 +123,10 @@ mainDeclaration declarations =
                                 Just (Node _ signature) ->
                                     case signature.typeAnnotation of
                                         Node _ (TypeAnnotation.Typed (Node _ ( [], "CSS" )) []) ->
-                                            Just (classDeclaration functionDeclaration)
+                                            Just (declarationHelper functionDeclaration)
 
                                         Node _ (TypeAnnotation.Typed (Node _ ( [ "CSS" ], "CSS" )) []) ->
-                                            Just (classDeclaration functionDeclaration)
+                                            Just (declarationHelper functionDeclaration)
 
                                         _ ->
                                             Nothing
@@ -157,6 +182,7 @@ mainDeclaration declarations =
                                                                                 (node
                                                                                     (Expression.Application
                                                                                         [ node (Expression.FunctionOrValue [ "CSS" ] "toString")
+                                                                                        , node (Expression.ListExpr cssVariableDeclarations)
                                                                                         , node (Expression.ListExpr classDeclarations)
                                                                                         ]
                                                                                     )
@@ -218,8 +244,8 @@ mainDeclaration declarations =
         )
 
 
-classDeclaration : Expression.Function -> Node Expression
-classDeclaration functionDeclaration =
+declarationHelper : Expression.Function -> Node Expression
+declarationHelper functionDeclaration =
     functionDeclaration.declaration
         |> Node.value
         |> .name
