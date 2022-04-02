@@ -15,21 +15,31 @@ const run = (file, options) => {
   if (options.css) {
     app.ports.resultCss.subscribe((data) => {
       fs.writeFileSync(path.resolve(__dirname, '../converter/tmp/ExportCss.elm'), data);
-      execSync(
-        `pushd ${path.resolve(__dirname, '../converter/')} && elm make tmp/ExportCss.elm --output=tmp/export-css.js --optimize && popd`,
-        { shell: '/bin/bash' }
-      );
 
-      delete require.cache[require.resolve('../converter/tmp/export-css.js')];
+      let elmMakeSucceeded = false;
 
-      const exportCss = require('../converter/tmp/export-css.js');
-      const exportCssApp = exportCss.Elm.ExportCss.init();
+      try {
+        execSync(
+          `pushd ${path.resolve(__dirname, '../converter/')} && elm make tmp/ExportCss.elm --output=tmp/export-css.js --optimize && popd`,
+          { shell: '/bin/bash', stdio: 'pipe' }
+        );
+        elmMakeSucceeded = true;
+      } catch (error) {
+        console.log(error.stderr.toString());
+      }
 
-      exportCssApp.ports.sendMessage.subscribe((data) => {
-        fs.writeFileSync(options.css, data);
-      });
+      if (elmMakeSucceeded) {
+        delete require.cache[require.resolve('../converter/tmp/export-css.js')];
 
-      exportCssApp.ports.messageReceiver.send(null);
+        const exportCss = require('../converter/tmp/export-css.js');
+        const exportCssApp = exportCss.Elm.ExportCss.init();
+
+        exportCssApp.ports.sendMessage.subscribe((data) => {
+          fs.writeFileSync(options.css, data);
+        });
+
+        exportCssApp.ports.messageReceiver.send(null);
+      }
     });
 
     app.ports.convertToCss.send(fs.readFileSync(file, 'utf8'));
