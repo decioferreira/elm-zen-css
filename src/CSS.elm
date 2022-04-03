@@ -1,7 +1,6 @@
 module CSS exposing
-    ( CSS, css, toString
+    ( CSS(..), css, toString
     , class
-    , custom, background, color
     , Variable, variable, var
     )
 
@@ -16,11 +15,6 @@ module CSS exposing
 # Attributes
 
 @docs class
-
-
-# Properties
-
-@docs custom, background, color
 
 
 # Variables
@@ -38,12 +32,20 @@ import Html.Attributes as Attributes
 
 
 type CSS
-    = CSS String (List ( String, String ))
+    = CSS
+        { className : String
+        , properties : List ( String, String )
+        , pseudoClasses : List ( String, CSS -> CSS )
+        }
 
 
 css : String -> CSS
 css className =
-    CSS className []
+    CSS
+        { className = className
+        , properties = []
+        , pseudoClasses = []
+        }
 
 
 toString : List Variable -> List CSS -> String
@@ -63,19 +65,24 @@ toString variables classes =
                    )
                 ++ "}\n"
     )
-        ++ (List.map
-                (\(CSS className properties) ->
-                    "."
-                        ++ className
-                        ++ " {"
-                        ++ (properties
-                                |> List.map propertyToString
-                                |> String.join "; "
-                           )
-                        ++ "}"
-                )
-                classes
+        ++ (List.map cssToString classes
                 |> String.join "\n"
+           )
+
+
+cssToString : CSS -> String
+cssToString (CSS details) =
+    "."
+        ++ details.className
+        ++ " {"
+        ++ (details.properties
+                |> List.map propertyToString
+                |> String.join "; "
+           )
+        ++ "}"
+        ++ (details.pseudoClasses
+                |> List.map (pseudoClassToString details.className)
+                |> String.join ""
            )
 
 
@@ -84,32 +91,22 @@ propertyToString ( propertyName, value ) =
     propertyName ++ ": " ++ value
 
 
+pseudoClassToString : String -> ( String, CSS -> CSS ) -> String
+pseudoClassToString className ( pseudoClassName, mapper ) =
+    "\n"
+        ++ (css (className ++ ":" ++ pseudoClassName)
+                |> mapper
+                |> cssToString
+           )
+
+
 
 -- Attributes
 
 
 class : CSS -> Html.Attribute msg
-class (CSS className _) =
+class (CSS { className }) =
     Attributes.class className
-
-
-
--- Properties
-
-
-custom : String -> String -> CSS -> CSS
-custom propertyName value (CSS className properties) =
-    CSS className (( propertyName, value ) :: properties)
-
-
-background : String -> CSS -> CSS
-background value (CSS className properties) =
-    CSS className (( "background", value ) :: properties)
-
-
-color : String -> CSS -> CSS
-color value (CSS className properties) =
-    CSS className (( "color", value ) :: properties)
 
 
 

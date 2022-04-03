@@ -1,6 +1,8 @@
 module Main exposing (button, number)
 
 import CSS exposing (CSS)
+import CSS.Property as Property
+import CSS.PseudoClass as PseudoClass
 
 
 
@@ -27,8 +29,8 @@ buttonPadding =
 
 fontStyle : CSS -> CSS
 fontStyle =
-    CSS.custom "font-family" "'Lucida Console', 'Courier New', monospace"
-        >> CSS.custom "font-size" "26px"
+    Property.custom "font-family" "'Lucida Console', 'Courier New', monospace"
+        >> Property.custom "font-size" "26px"
 
 
 
@@ -39,15 +41,19 @@ button : CSS
 button =
     CSS.css "button"
         |> fontStyle
-        |> CSS.background color
-        |> CSS.color "white"
-        |> CSS.custom "border" "none"
-        |> CSS.custom "padding" (CSS.var buttonPadding)
+        |> Property.background color
+        |> Property.color "white"
+        |> Property.custom "border" "none"
+        |> Property.custom "padding" (CSS.var buttonPadding)
+        |> PseudoClass.hover
+            (Property.background "lightgreen"
+                >> Property.color "black"
+            )
 
 
 number : CSS.CSS
 number =
     CSS.css "number"
         |> fontStyle
-        |> CSS.color color
-        |> CSS.custom "padding" "var(--number-padding, 10px)"
+        |> Property.color color
+        |> Property.custom "padding" "var(--number-padding, 10px)"

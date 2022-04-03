@@ -23,27 +23,39 @@ sourceToProd data =
                             | moduleDefinition =
                                 case file.moduleDefinition of
                                     Node range (Module.NormalModule defaultModuleData) ->
-                                        Node range (Module.NormalModule { defaultModuleData | moduleName = Helpers.node data.name })
+                                        let
+                                            (Node moduleNameRange _) =
+                                                defaultModuleData.moduleName
+                                        in
+                                        Node range (Module.NormalModule { defaultModuleData | moduleName = Node moduleNameRange data.name })
 
                                     Node range (Module.PortModule defaultModuleData) ->
-                                        Node range (Module.PortModule { defaultModuleData | moduleName = Helpers.node data.name })
+                                        let
+                                            (Node moduleNameRange _) =
+                                                defaultModuleData.moduleName
+                                        in
+                                        Node range (Module.PortModule { defaultModuleData | moduleName = Node moduleNameRange data.name })
 
                                     Node range (Module.EffectModule effectModuleData) ->
-                                        Node range (Module.EffectModule { effectModuleData | moduleName = Helpers.node data.name })
+                                        let
+                                            (Node moduleNameRange _) =
+                                                effectModuleData.moduleName
+                                        in
+                                        Node range (Module.EffectModule { effectModuleData | moduleName = Node moduleNameRange data.name })
                             , declarations =
                                 file.declarations
                                     |> List.filterMap
                                         (\declaration ->
                                             case declaration of
-                                                Node _ (Declaration.FunctionDeclaration function) ->
+                                                Node range (Declaration.FunctionDeclaration function) ->
                                                     case function.signature of
                                                         Just (Node _ signature) ->
                                                             case signature.typeAnnotation of
                                                                 Node _ (TypeAnnotation.Typed (Node _ ( [], "CSS" )) []) ->
-                                                                    Just (cssOnly function)
+                                                                    Just (Node range (cssOnly function))
 
                                                                 Node _ (TypeAnnotation.Typed (Node _ ( [ "CSS" ], "CSS" )) []) ->
-                                                                    Just (cssOnly function)
+                                                                    Just (Node range (cssOnly function))
 
                                                                 _ ->
                                                                     Nothing
@@ -62,17 +74,15 @@ sourceToProd data =
         |> Result.extract (always "There was an error!")
 
 
-cssOnly : Expression.Function -> Node Declaration
+cssOnly : Expression.Function -> Declaration
 cssOnly function =
-    Helpers.node
-        (Declaration.FunctionDeclaration
-            { function
-                | declaration =
-                    case function.declaration of
-                        Node _ functionImplementation ->
-                            Helpers.node { functionImplementation | expression = extractNestedNode functionImplementation.expression }
-            }
-        )
+    Declaration.FunctionDeclaration
+        { function
+            | declaration =
+                case function.declaration of
+                    Node range functionImplementation ->
+                        Node range { functionImplementation | expression = extractNestedNode functionImplementation.expression }
+        }
 
 
 extractNestedNode : Node Expression -> Node Expression
