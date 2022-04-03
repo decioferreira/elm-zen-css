@@ -42,6 +42,17 @@ sourceToProd data =
                                                 effectModuleData.moduleName
                                         in
                                         Node range (Module.EffectModule { effectModuleData | moduleName = Node moduleNameRange data.name })
+                            , imports =
+                                file.imports
+                                    |> List.filter
+                                        (\(Node _ { moduleName }) ->
+                                            case moduleName of
+                                                Node _ ("CSS" :: _ :: _) ->
+                                                    False
+
+                                                _ ->
+                                                    True
+                                        )
                             , declarations =
                                 file.declarations
                                     |> List.filterMap

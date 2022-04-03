@@ -1,4 +1,4 @@
-module CSS.Property exposing (custom, background, color)
+module CSS.Properties exposing (custom, background, color)
 
 {-|
 
@@ -9,7 +9,7 @@ module CSS.Property exposing (custom, background, color)
 
 -}
 
-import CSS exposing (CSS(..))
+import CSS.Internal exposing (CSS(..))
 
 
 custom : String -> String -> CSS -> CSS

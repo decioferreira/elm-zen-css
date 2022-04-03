@@ -39,6 +39,9 @@ sourceToCss =
                                                 , exposingList = node (Exposing.Explicit [ node (Exposing.FunctionExpose "main") ])
                                                 }
                                             )
+                            , imports =
+                                node { exposingList = Nothing, moduleAlias = Nothing, moduleName = node [ "CSS", "Internal" ] }
+                                    :: file.imports
                             , declarations =
                                 sendMessageDeclaration
                                     :: messageReceiverDeclaration
@@ -181,7 +184,7 @@ mainDeclaration declarations =
                                                                             (Expression.ParenthesizedExpression
                                                                                 (node
                                                                                     (Expression.Application
-                                                                                        [ node (Expression.FunctionOrValue [ "CSS" ] "toString")
+                                                                                        [ node (Expression.FunctionOrValue [ "CSS", "Internal" ] "toString")
                                                                                         , node (Expression.ListExpr cssVariableDeclarations)
                                                                                         , node (Expression.ListExpr classDeclarations)
                                                                                         ]

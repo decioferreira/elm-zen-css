@@ -1,4 +1,4 @@
-module CSS.PseudoClass exposing (custom, hover)
+module CSS.PseudoClasses exposing (custom, hover)
 
 {-|
 
@@ -9,7 +9,7 @@ module CSS.PseudoClass exposing (custom, hover)
 
 -}
 
-import CSS exposing (CSS(..))
+import CSS.Internal exposing (CSS(..))
 
 
 custom : String -> (CSS -> CSS) -> CSS -> CSS

@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Browser
-import CSS
+import CSS.Attributes
 import Classes
 import Html exposing (Html)
 import Html.Events as Events
@@ -60,17 +60,39 @@ view : Model -> Html Msg
 view model =
     Html.div []
         [ Html.button
-            [ CSS.class Classes.button
+            [ CSS.Attributes.class Classes.button
             , Events.onClick Decrement
             ]
             [ Html.text "-" ]
         , Html.div
-            [ CSS.class Classes.number
+            [ CSS.Attributes.class Classes.number
             ]
             [ Html.text (String.fromInt model) ]
         , Html.button
-            [ CSS.class Classes.button
+            [ CSS.Attributes.class Classes.button
             , Events.onClick Increment
             ]
             [ Html.text "+" ]
+        , Html.ul []
+            [ Html.li [ CSS.Attributes.class Classes.listItem ]
+                [ Html.div []
+                    [ Html.text "Item 1" ]
+                , Html.ul []
+                    [ Html.li [ CSS.Attributes.class Classes.listItem ]
+                        [ Html.text "Subitem A" ]
+                    , Html.li [ CSS.Attributes.class Classes.listItem ]
+                        [ Html.text "Subitem B" ]
+                    ]
+                ]
+            , Html.li [ CSS.Attributes.class Classes.listItem ]
+                [ Html.div []
+                    [ Html.text "Item 2" ]
+                , Html.ul []
+                    [ Html.li [ CSS.Attributes.class Classes.listItem ]
+                        [ Html.text "Subitem A" ]
+                    , Html.li [ CSS.Attributes.class Classes.listItem ]
+                        [ Html.text "Subitem B" ]
+                    ]
+                ]
+            ]
         ]

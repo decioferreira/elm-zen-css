@@ -1,4 +1,4 @@
-module CSS.PseudoElement exposing (custom, before, after)
+module CSS.PseudoElements exposing (custom, before, after)
 
 {-|
 
@@ -9,7 +9,7 @@ module CSS.PseudoElement exposing (custom, before, after)
 
 -}
 
-import CSS exposing (CSS(..))
+import CSS.Internal exposing (CSS(..))
 
 
 custom : String -> (CSS -> CSS) -> CSS -> CSS

@@ -1,7 +1,6 @@
 module CSS exposing
-    ( CSS(..), css, toString
-    , class
-    , Variable, variable, var
+    ( CSS
+    , css, descendantClass
     )
 
 {-|
@@ -9,134 +8,39 @@ module CSS exposing
 
 # Definition
 
-@docs CSS, css, toString
+@docs CSS
 
 
-# Attributes
+# Methods
 
-@docs class
-
-
-# Variables
-
-@docs Variable, variable, var
+@docs css, descendantClass
 
 -}
 
-import Html
-import Html.Attributes as Attributes
+import CSS.Internal as Internal
 
 
 
--- Definitions
+-- Definition
 
 
-type CSS
-    = CSS
-        { className : String
-        , properties : List ( String, String )
-        , pseudoClasses : List ( String, CSS -> CSS )
-        , pseudoElements : List ( String, CSS -> CSS )
-        }
+type alias CSS =
+    Internal.CSS
+
+
+
+-- Methods
 
 
 css : String -> CSS
-css className =
-    CSS
-        { className = className
-        , properties = []
-        , pseudoClasses = []
-        , pseudoElements = []
+css =
+    Internal.css
+
+
+descendantClass : String -> (CSS -> CSS) -> CSS -> CSS
+descendantClass descendantClassName value (Internal.CSS details) =
+    Internal.CSS
+        { details
+            | descendantClasses =
+                ( descendantClassName, value ) :: details.descendantClasses
         }
-
-
-toString : List Variable -> List CSS -> String
-toString variables classes =
-    (case variables of
-        [] ->
-            ""
-
-        _ ->
-            ":root {"
-                ++ (List.map
-                        (\(Variable name value) ->
-                            "--" ++ name ++ ": " ++ value
-                        )
-                        variables
-                        |> String.join "; "
-                   )
-                ++ "}\n"
-    )
-        ++ (List.map cssToString classes
-                |> String.join "\n"
-           )
-
-
-cssToString : CSS -> String
-cssToString (CSS details) =
-    "."
-        ++ details.className
-        ++ " {"
-        ++ (details.properties
-                |> List.map propertyToString
-                |> String.join "; "
-           )
-        ++ "}"
-        ++ (details.pseudoClasses
-                |> List.map (pseudoClassToString details.className)
-                |> String.join ""
-           )
-        ++ (details.pseudoElements
-                |> List.map (pseudoElementToString details.className)
-                |> String.join ""
-           )
-
-
-propertyToString : ( String, String ) -> String
-propertyToString ( propertyName, value ) =
-    propertyName ++ ": " ++ value
-
-
-pseudoClassToString : String -> ( String, CSS -> CSS ) -> String
-pseudoClassToString className ( pseudoClassName, mapper ) =
-    "\n"
-        ++ (css (className ++ ":" ++ pseudoClassName)
-                |> mapper
-                |> cssToString
-           )
-
-
-pseudoElementToString : String -> ( String, CSS -> CSS ) -> String
-pseudoElementToString className ( pseudoElementName, mapper ) =
-    "\n"
-        ++ (css (className ++ "::" ++ pseudoElementName)
-                |> mapper
-                |> cssToString
-           )
-
-
-
--- Attributes
-
-
-class : CSS -> Html.Attribute msg
-class (CSS { className }) =
-    Attributes.class className
-
-
-
--- Variables
-
-
-type Variable
-    = Variable String String
-
-
-variable : String -> String -> Variable
-variable =
-    Variable
-
-
-var : Variable -> String
-var (Variable name _) =
-    "var(--" ++ name ++ ")"
