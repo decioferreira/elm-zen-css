@@ -36,6 +36,7 @@ type CSS
         { className : String
         , properties : List ( String, String )
         , pseudoClasses : List ( String, CSS -> CSS )
+        , pseudoElements : List ( String, CSS -> CSS )
         }
 
 
@@ -45,6 +46,7 @@ css className =
         { className = className
         , properties = []
         , pseudoClasses = []
+        , pseudoElements = []
         }
 
 
@@ -84,6 +86,10 @@ cssToString (CSS details) =
                 |> List.map (pseudoClassToString details.className)
                 |> String.join ""
            )
+        ++ (details.pseudoElements
+                |> List.map (pseudoElementToString details.className)
+                |> String.join ""
+           )
 
 
 propertyToString : ( String, String ) -> String
@@ -95,6 +101,15 @@ pseudoClassToString : String -> ( String, CSS -> CSS ) -> String
 pseudoClassToString className ( pseudoClassName, mapper ) =
     "\n"
         ++ (css (className ++ ":" ++ pseudoClassName)
+                |> mapper
+                |> cssToString
+           )
+
+
+pseudoElementToString : String -> ( String, CSS -> CSS ) -> String
+pseudoElementToString className ( pseudoElementName, mapper ) =
+    "\n"
+        ++ (css (className ++ "::" ++ pseudoElementName)
                 |> mapper
                 |> cssToString
            )

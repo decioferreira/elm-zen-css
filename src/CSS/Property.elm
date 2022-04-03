@@ -10,8 +10,6 @@ module CSS.Property exposing (custom, background, color)
 -}
 
 import CSS exposing (CSS(..))
-import Html
-import Html.Attributes as Attributes
 
 
 custom : String -> String -> CSS -> CSS

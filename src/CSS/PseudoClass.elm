@@ -1,4 +1,13 @@
-module CSS.PseudoClass exposing (..)
+module CSS.PseudoClass exposing (custom, hover)
+
+{-|
+
+
+# Pseudo-classes
+
+@docs custom, hover
+
+-}
 
 import CSS exposing (CSS(..))
 

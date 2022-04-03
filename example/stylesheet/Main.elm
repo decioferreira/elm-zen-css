@@ -3,6 +3,7 @@ module Main exposing (button, number)
 import CSS exposing (CSS)
 import CSS.Property as Property
 import CSS.PseudoClass as PseudoClass
+import CSS.PseudoElement as PseudoElement
 
 
 
@@ -57,3 +58,5 @@ number =
         |> fontStyle
         |> Property.color color
         |> Property.custom "padding" "var(--number-padding, 10px)"
+        |> PseudoElement.before (Property.custom "content" "'('")
+        |> PseudoElement.after (Property.custom "content" "')'")
