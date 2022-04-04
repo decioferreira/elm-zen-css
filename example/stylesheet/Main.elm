@@ -1,6 +1,7 @@
-module Main exposing (button, number, strong, listItem)
+module Main exposing (button, listItem, number, strong)
 
 import CSS exposing (CSS)
+import CSS.AtRules as AtRules
 import CSS.Properties as Properties
 import CSS.PseudoClasses as PseudoClasses
 import CSS.PseudoElements as PseudoElements
@@ -51,6 +52,7 @@ button =
             (Properties.background "lightgreen"
                 >> Properties.color "black"
             )
+        |> AtRules.media "screen and (max-width: 900px)" (Properties.custom "width" "100%")
 
 
 number : CSS.CSS
@@ -67,6 +69,7 @@ strong : CSS
 strong =
     CSS.css "strong"
         |> Properties.custom "font-weight" "bold"
+
 
 listItem : CSS
 listItem =

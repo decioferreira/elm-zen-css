@@ -37,6 +37,7 @@ type CSS
         , pseudoClasses : List ( String, CSS -> CSS )
         , pseudoElements : List ( String, CSS -> CSS )
         , descendantClasses : List ( String, CSS -> CSS )
+        , atRules : List ( String, String, CSS -> CSS )
         }
 
 
@@ -52,6 +53,7 @@ css className =
         , pseudoClasses = []
         , pseudoElements = []
         , descendantClasses = []
+        , atRules = []
         }
 
 
@@ -103,6 +105,10 @@ cssToString (CSS details) =
                 |> List.map (descendantClassToString details.className)
                 |> String.join ""
            )
+        ++ (details.atRules
+                |> List.map (atRuleToString details.className)
+                |> String.join ""
+           )
 
 
 propertyToString : ( String, String ) -> String
@@ -135,3 +141,17 @@ descendantClassToString className ( descendantClassName, mapper ) =
                 |> mapper
                 |> cssToString
            )
+
+
+atRuleToString : String -> ( String, String, CSS -> CSS ) -> String
+atRuleToString className ( identifier, rule, mapper ) =
+    "\n@"
+        ++ identifier
+        ++ " "
+        ++ rule
+        ++ " {"
+        ++ (css className
+                |> mapper
+                |> cssToString
+           )
+        ++ "}"
