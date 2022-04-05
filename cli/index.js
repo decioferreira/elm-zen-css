@@ -58,7 +58,7 @@ const run = (file, options) => {
 };
 
 program
-  .description('Elm CSS')
+  .description('Elm Zen CSS')
   .option('-c, --css <css-file>', 'output CSS file')
   .option('-e, --elm <elm-file>', 'output production version file')
   .option('-w, --watch', 'watch file changes')

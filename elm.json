@@ -1,7 +1,7 @@
 {
     "type": "package",
-    "name": "decioferreira/elm-css",
-    "summary": "Elm CSS",
+    "name": "decioferreira/elm-zen-css",
+    "summary": "Elm Zen CSS",
     "license": "MIT",
     "version": "0.0.1",
     "exposed-modules": [

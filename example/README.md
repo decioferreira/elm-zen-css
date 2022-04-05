@@ -1,4 +1,4 @@
-# Elm CSS example
+# Elm Zen CSS example
 
 Make sure you run all the following commands from within the `example` directory.
 

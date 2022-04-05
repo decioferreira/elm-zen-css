@@ -1,7 +1,7 @@
 {
-  "name": "elm-css",
+  "name": "elm-zen-css",
   "version": "0.0.1",
-  "repository": "git@github.com:decioferreira/elm-css.git",
+  "repository": "git@github.com:decioferreira/elm-zen-css.git",
   "author": "Decio Ferreira <decio.jferreira@gmail.com>",
   "license": "MIT",
   "dependencies": {

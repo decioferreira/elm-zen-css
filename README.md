@@ -1,18 +1,18 @@
-# Elm CSS
+# Elm Zen CSS
 
 ## Installation
 
 ```bash
-npm install elm-css
+npm install elm-zen-css
 ```
 
 ## Usage
 
 ```
-% elm-css --help
+% elm-zen-css --help
 Usage: cli [options] <stylesheet-elm-file>
 
-Elm CSS
+Elm Zen CSS
 
 Arguments:
   stylesheet-elm-file  watch file changes
