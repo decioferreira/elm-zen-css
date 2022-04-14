@@ -1,10 +1,12 @@
-module Main exposing (button, listItem, number, strong)
+module Main exposing (button, checkbox, listItem, number, strong)
 
 import CSS exposing (CSS)
 import CSS.AtRules as AtRules
 import CSS.Properties as Properties
+import CSS.Properties.AccentColor as AccentColor
 import CSS.PseudoClasses as PseudoClasses
 import CSS.PseudoElements as PseudoElements
+import CSS.Types.Color as Color
 import CSS.Variables as Variables
 
 
@@ -44,13 +46,13 @@ button : CSS
 button =
     CSS.css "button"
         |> fontStyle
-        |> Properties.background color
-        |> Properties.color "white"
+        |> Properties.custom "background" color
+        |> Properties.custom "color" "white"
         |> Properties.custom "border" "none"
         |> Properties.custom "padding" (Variables.var buttonPadding)
         |> PseudoClasses.hover
-            (Properties.background "lightgreen"
-                >> Properties.color "black"
+            (Properties.custom "background" "lightgreen"
+                >> Properties.custom "color" "black"
             )
         |> AtRules.media "screen and (max-width: 900px)" (Properties.custom "width" "100%")
 
@@ -59,7 +61,7 @@ number : CSS.CSS
 number =
     CSS.css "number"
         |> fontStyle
-        |> Properties.color color
+        |> Properties.custom "color" color
         |> Properties.custom "padding" "var(--number-padding, 10px)"
         |> PseudoElements.before (Properties.custom "content" "'('")
         |> PseudoElements.after (Properties.custom "content" "')'")
@@ -69,6 +71,12 @@ strong : CSS
 strong =
     CSS.css "strong"
         |> Properties.custom "font-weight" "bold"
+
+
+checkbox : CSS
+checkbox =
+    CSS.css "checkbox"
+        |> AccentColor.color Color.red
 
 
 listItem : CSS

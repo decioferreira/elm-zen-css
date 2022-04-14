@@ -4,6 +4,7 @@ import Browser
 import CSS.Attributes
 import Classes
 import Html exposing (Html)
+import Html.Attributes as Attributes
 import Html.Events as Events
 
 
@@ -93,6 +94,21 @@ view model =
                     , Html.li [ CSS.Attributes.class Classes.listItem ]
                         [ Html.text "Subitem B" ]
                     ]
+                ]
+            ]
+        , Html.div []
+            [ Html.input
+                [ Attributes.attribute "checked" "checked"
+                , Attributes.type_ "checkbox"
+                , Attributes.id "example-element"
+                , CSS.Attributes.class Classes.checkbox
+                ]
+                []
+            , Html.label
+                [ Attributes.id "example-label"
+                , Attributes.for "example-element"
+                ]
+                [ Html.text "Example Label"
                 ]
             ]
         ]

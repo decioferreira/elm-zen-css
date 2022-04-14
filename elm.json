@@ -7,9 +7,12 @@
     "exposed-modules": [
         "CSS.AtRules",
         "CSS.Attributes",
+        "CSS.Properties.AccentColor",
+        "CSS.Properties.ZIndex",
         "CSS.Properties",
         "CSS.PseudoClasses",
         "CSS.PseudoElements",
+        "CSS.Types.Color",
         "CSS.Variables",
         "CSS"
     ],

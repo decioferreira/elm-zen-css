@@ -1,27 +1,18 @@
-module CSS.Properties exposing (custom, background, color)
+module CSS.Properties exposing (custom)
 
 {-|
 
 
 # Properties
 
-@docs custom, background, color
+@docs custom
 
 -}
 
 import CSS.Internal exposing (CSS(..))
 
 
+{-| -}
 custom : String -> String -> CSS -> CSS
 custom propertyName value (CSS details) =
     CSS { details | properties = ( propertyName, value ) :: details.properties }
-
-
-background : String -> CSS -> CSS
-background =
-    custom "background"
-
-
-color : String -> CSS -> CSS
-color =
-    custom "color"
