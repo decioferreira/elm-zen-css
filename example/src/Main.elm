@@ -6,6 +6,8 @@ import Classes
 import Html exposing (Html)
 import Html.Attributes as Attributes
 import Html.Events as Events
+import Svg
+import Svg.Attributes
 
 
 
@@ -110,5 +112,18 @@ view model =
                 ]
                 [ Html.text "Example Label"
                 ]
+            ]
+        , Svg.svg
+            [ Svg.Attributes.viewBox "0 0 400 400"
+            , Svg.Attributes.width "400"
+            , Svg.Attributes.height "400"
+            ]
+            [ Svg.circle
+                [ Svg.Attributes.cx "200"
+                , Svg.Attributes.cy "200"
+                , Svg.Attributes.r "120"
+                , CSS.Attributes.svgClass Classes.svgCircle
+                ]
+                []
             ]
         ]

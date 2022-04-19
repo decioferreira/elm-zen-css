@@ -1,17 +1,19 @@
-module CSS.Attributes exposing (class, classList)
+module CSS.Attributes exposing (class, classList, svgClass)
 
 {-|
 
 
 # Attributes
 
-@docs class, classList
+@docs class, classList, svgClass
 
 -}
 
 import CSS.Internal exposing (CSS(..))
 import Html
 import Html.Attributes as Attributes
+import Svg
+import Svg.Attributes
 
 
 {-| HTML class attribute.
@@ -30,3 +32,10 @@ classList classes =
     classes
         |> List.map (Tuple.mapFirst (\(CSS { className }) -> className))
         |> Attributes.classList
+
+
+{-| SVG class attribute.
+-}
+svgClass : CSS -> Svg.Attribute msg
+svgClass (CSS { className }) =
+    Svg.Attributes.class className

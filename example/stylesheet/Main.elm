@@ -1,4 +1,4 @@
-module Main exposing (button, checkbox, listItem, number, strong)
+module Main exposing (button, checkbox, listItem, number, strong, svgCircle)
 
 import CSS exposing (CSS)
 import CSS.AtRules as AtRules
@@ -84,3 +84,9 @@ listItem =
     CSS.css "list-item"
         |> Properties.custom "list-style-type" "'\\\\1F534'"
         |> CSS.descendantClass "list-item" (Properties.custom "list-style-type" "'\\\\1F535'")
+
+
+svgCircle : CSS
+svgCircle =
+    CSS.css "svg-circle"
+        |> Properties.custom "fill" "#1293D8"
