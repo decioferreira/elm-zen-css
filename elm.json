@@ -10,6 +10,8 @@
         "CSS.Properties.AccentColor",
         "CSS.Properties.AlignContent",
         "CSS.Properties.AlignItems",
+        "CSS.Properties.AlignSelf",
+        "CSS.Properties.All",
         "CSS.Properties.ZIndex",
         "CSS.Properties",
         "CSS.PseudoClasses",
