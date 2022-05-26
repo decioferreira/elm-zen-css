@@ -26,12 +26,12 @@ Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color>
 
 -}
 
-import CSS.Internal exposing (CSS)
+import CSS.Internal exposing (Property)
 import CSS.Properties as Properties
 import CSS.Types.Color as Color exposing (Color)
 
 
-property : String -> CSS -> CSS
+property : String -> Property
 property =
     Properties.custom "accent-color"
 
@@ -43,14 +43,14 @@ property =
 {-| Represents a UA-chosen color, which should match the accent color of the
 platform, if any.
 -}
-auto : CSS -> CSS
+auto : Property
 auto =
     property "auto"
 
 
 {-| Specifies the color to be used as the accent color.
 -}
-color : Color -> CSS -> CSS
+color : Color -> Property
 color =
     property << Color.toString
 
@@ -65,7 +65,7 @@ property from its parent element.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/inherit>
 
 -}
-inherit : CSS -> CSS
+inherit : Property
 inherit =
     property "inherit"
 
@@ -76,7 +76,7 @@ to an element.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/initial>
 
 -}
-initial : CSS -> CSS
+initial : Property
 initial =
     property "initial"
 
@@ -88,7 +88,7 @@ made by the current style origin to the current element.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/revert>
 
 -}
-revert : CSS -> CSS
+revert : Property
 revert =
     property "revert"
 
@@ -100,7 +100,7 @@ previous cascade layer.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/revert-layer>
 
 -}
-revertLayer : CSS -> CSS
+revertLayer : Property
 revertLayer =
     property "revert-layer"
 
@@ -111,6 +111,6 @@ property naturally inherits from its parent, and to its initial value if not.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/unset>
 
 -}
-unset : CSS -> CSS
+unset : Property
 unset =
     property "unset"

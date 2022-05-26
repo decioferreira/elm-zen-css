@@ -12,13 +12,18 @@ Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes>
 
 -}
 
-import CSS.Internal exposing (CSS(..))
+import CSS.Internal exposing (Class(..), Property)
 
 
 {-| -}
-custom : String -> (CSS -> CSS) -> CSS -> CSS
-custom pseudoClassName value (CSS details) =
-    CSS { details | pseudoClasses = ( pseudoClassName, value ) :: details.pseudoClasses }
+custom : String -> List Property -> Class -> Class
+custom pseudoClassName value (Class details) =
+    Class
+        { details
+            | pseudoClasses =
+                ( pseudoClassName, value )
+                    :: details.pseudoClasses
+        }
 
 
 {-| The :hover CSS pseudo-class matches when the user interacts with an element
@@ -27,6 +32,6 @@ with a pointing device, but does not necessarily activate it.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/:hover>
 
 -}
-hover : (CSS -> CSS) -> CSS -> CSS
+hover : List Property -> Class -> Class
 hover =
     custom "hover"

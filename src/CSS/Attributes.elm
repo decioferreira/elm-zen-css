@@ -9,7 +9,7 @@ module CSS.Attributes exposing (class, classList, svgClass)
 
 -}
 
-import CSS.Internal exposing (CSS(..))
+import CSS.Internal exposing (ClassName(..))
 import Html
 import Html.Attributes as Attributes
 import Svg
@@ -18,24 +18,24 @@ import Svg.Attributes
 
 {-| HTML class attribute.
 -}
-class : CSS -> Html.Attribute msg
-class (CSS { className }) =
-    Attributes.class className
+class : ClassName -> Html.Attribute msg
+class (ClassName name) =
+    Attributes.class name
 
 
 {-| This function makes it easier to build a space-separated class attribute.
 Each class can easily be added and removed depending on the boolean value it is
 paired with.
 -}
-classList : List ( CSS, Bool ) -> Html.Attribute msg
+classList : List ( ClassName, Bool ) -> Html.Attribute msg
 classList classes =
     classes
-        |> List.map (Tuple.mapFirst (\(CSS { className }) -> className))
+        |> List.map (Tuple.mapFirst (\(ClassName name) -> name))
         |> Attributes.classList
 
 
 {-| SVG class attribute.
 -}
-svgClass : CSS -> Svg.Attribute msg
-svgClass (CSS { className }) =
-    Svg.Attributes.class className
+svgClass : ClassName -> Svg.Attribute msg
+svgClass (ClassName name) =
+    Svg.Attributes.class name

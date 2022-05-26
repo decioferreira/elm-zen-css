@@ -1,6 +1,5 @@
 module CSS.Internal exposing
-    ( CSS(..)
-    , css
+    ( Variable(..), Class(..), ClassName(..), ExternalClass(..), Property, AtRule(..), Keyframe(..)
     , toString
     )
 
@@ -9,12 +8,7 @@ module CSS.Internal exposing
 
 # Definition
 
-@docs CSS
-
-
-# Methods
-
-@docs css
+@docs Variable, Class, ClassName, ExternalClass, Property, AtRule, Keyframe
 
 
 # To String
@@ -23,135 +17,152 @@ module CSS.Internal exposing
 
 -}
 
-import CSS.Variables.Internal exposing (Variable(..))
+-- DEFINITION
 
 
+type Variable
+    = Variable String String
 
--- Definition
+
+type Class
+    = Class
+        { name : String
+        , properties : List Property
+        , pseudoClasses : List ( String, List Property )
+        , pseudoElements : List ( String, List Property )
+        , atRules : List AtRule
+        }
 
 
-type CSS
-    = CSS
-        { className : String
-        , properties : List ( String, String )
-        , pseudoClasses : List ( String, CSS -> CSS )
-        , pseudoElements : List ( String, CSS -> CSS )
-        , descendantClasses : List ( String, CSS -> CSS )
-        , atRules : List ( String, String, CSS -> CSS )
+type ClassName
+    = ClassName String
+
+
+type ExternalClass
+    = ExternalClass String
+
+
+type alias Property =
+    ( String, String )
+
+
+type AtRule
+    = AtRuleMedia
+        { rule : String
+        , properties : List Property
+        }
+
+
+type Keyframe
+    = Keyframe
+        { identifier : String
+        , values : List { selector : String, properties : List Property }
         }
 
 
 
--- Methods
+-- TO STRING
 
 
-css : String -> CSS
-css className =
-    CSS
-        { className = className
-        , properties = []
-        , pseudoClasses = []
-        , pseudoElements = []
-        , descendantClasses = []
-        , atRules = []
-        }
-
-
-
--- To String
-
-
-toString : List Variable -> List CSS -> String
-toString variables classes =
-    (case variables of
+toString :
+    { classes : List Class
+    , keyframes : List Keyframe
+    , variables : List Variable
+    }
+    -> String
+toString info =
+    (case info.variables of
         [] ->
             ""
 
-        _ ->
+        variables ->
             ":root {"
-                ++ (List.map
-                        (\(Variable name value) ->
-                            "--" ++ name ++ ": " ++ value
-                        )
-                        variables
+                ++ (List.map variableToString variables
                         |> String.join "; "
                    )
                 ++ "}\n"
     )
-        ++ (List.map cssToString classes
+        ++ (List.map keyframeToString info.keyframes
+                |> String.join "\n"
+           )
+        ++ (List.map classToString info.classes
                 |> String.join "\n"
            )
 
 
-cssToString : CSS -> String
-cssToString (CSS details) =
-    "."
-        ++ details.className
+variableToString : Variable -> String
+variableToString (Variable name value) =
+    "--" ++ name ++ ": " ++ value
+
+
+keyframeToString : Keyframe -> String
+keyframeToString (Keyframe info) =
+    "@keyframes "
+        ++ info.identifier
         ++ " {"
-        ++ (details.properties
-                |> List.map propertyToString
-                |> String.join "; "
+        ++ (info.values
+                |> List.map
+                    (\value ->
+                        styleRule value.selector value.properties
+                    )
+                |> String.join " "
            )
-        ++ "}"
+        ++ "}\n"
+
+
+classToString : Class -> String
+classToString (Class details) =
+    styleRule ("." ++ details.name) details.properties
         ++ (details.pseudoClasses
-                |> List.map (pseudoClassToString details.className)
+                |> List.map (pseudoClassToString details.name)
                 |> String.join ""
            )
         ++ (details.pseudoElements
-                |> List.map (pseudoElementToString details.className)
-                |> String.join ""
-           )
-        ++ (details.descendantClasses
-                |> List.map (descendantClassToString details.className)
+                |> List.map (pseudoElementToString details.name)
                 |> String.join ""
            )
         ++ (details.atRules
-                |> List.map (atRuleToString details.className)
+                |> List.map (atRuleToString details.name)
                 |> String.join ""
            )
+
+
+pseudoClassToString : String -> ( String, List ( String, String ) ) -> String
+pseudoClassToString className ( pseudoClassName, properties ) =
+    "\n" ++ styleRule ("." ++ className ++ ":" ++ pseudoClassName) properties
+
+
+pseudoElementToString : String -> ( String, List ( String, String ) ) -> String
+pseudoElementToString className ( pseudoElementName, properties ) =
+    "\n" ++ styleRule ("." ++ className ++ "::" ++ pseudoElementName) properties
+
+
+atRuleToString : String -> AtRule -> String
+atRuleToString className atRule =
+    case atRule of
+        AtRuleMedia { rule, properties } ->
+            "\n@media "
+                ++ rule
+                ++ " {"
+                ++ styleRule ("." ++ className) properties
+                ++ "}"
+
+
+
+-- HELPERS
+
+
+styleRule : String -> List ( String, String ) -> String
+styleRule selectors properties =
+    selectors
+        ++ " {"
+        ++ (properties
+                |> List.map propertyToString
+                |> String.join ";"
+           )
+        ++ "}"
 
 
 propertyToString : ( String, String ) -> String
 propertyToString ( propertyName, value ) =
     propertyName ++ ": " ++ value
-
-
-pseudoClassToString : String -> ( String, CSS -> CSS ) -> String
-pseudoClassToString className ( pseudoClassName, mapper ) =
-    "\n"
-        ++ (css (className ++ ":" ++ pseudoClassName)
-                |> mapper
-                |> cssToString
-           )
-
-
-pseudoElementToString : String -> ( String, CSS -> CSS ) -> String
-pseudoElementToString className ( pseudoElementName, mapper ) =
-    "\n"
-        ++ (css (className ++ "::" ++ pseudoElementName)
-                |> mapper
-                |> cssToString
-           )
-
-
-descendantClassToString : String -> ( String, CSS -> CSS ) -> String
-descendantClassToString className ( descendantClassName, mapper ) =
-    "\n"
-        ++ (css (className ++ " ." ++ descendantClassName)
-                |> mapper
-                |> cssToString
-           )
-
-
-atRuleToString : String -> ( String, String, CSS -> CSS ) -> String
-atRuleToString className ( identifier, rule, mapper ) =
-    "\n@"
-        ++ identifier
-        ++ " "
-        ++ rule
-        ++ " {"
-        ++ (css className
-                |> mapper
-                |> cssToString
-           )
-        ++ "}"

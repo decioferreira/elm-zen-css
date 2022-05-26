@@ -27,11 +27,11 @@ Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/z-index>
 
 -}
 
-import CSS.Internal exposing (CSS)
+import CSS.Internal exposing (Property)
 import CSS.Properties as Properties
 
 
-property : String -> CSS -> CSS
+property : String -> Property
 property =
     Properties.custom "z-index"
 
@@ -41,13 +41,13 @@ property =
 
 
 {-| -}
-auto : CSS -> CSS
+auto : Property
 auto =
     property "auto"
 
 
 {-| -}
-number : Int -> CSS -> CSS
+number : Int -> Property
 number =
     property << String.fromInt
 
@@ -62,7 +62,7 @@ property from its parent element.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/inherit>
 
 -}
-inherit : CSS -> CSS
+inherit : Property
 inherit =
     property "inherit"
 
@@ -73,7 +73,7 @@ to an element.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/initial>
 
 -}
-initial : CSS -> CSS
+initial : Property
 initial =
     property "initial"
 
@@ -85,7 +85,7 @@ made by the current style origin to the current element.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/revert>
 
 -}
-revert : CSS -> CSS
+revert : Property
 revert =
     property "revert"
 
@@ -97,7 +97,7 @@ previous cascade layer.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/revert-layer>
 
 -}
-revertLayer : CSS -> CSS
+revertLayer : Property
 revertLayer =
     property "revert-layer"
 
@@ -108,6 +108,6 @@ property naturally inherits from its parent, and to its initial value if not.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/unset>
 
 -}
-unset : CSS -> CSS
+unset : Property
 unset =
     property "unset"

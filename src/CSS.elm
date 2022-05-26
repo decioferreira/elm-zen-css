@@ -1,19 +1,19 @@
 module CSS exposing
-    ( CSS
-    , css, descendantClass
+    ( Variable, Class, ClassName, ExternalClass, Property, AtRule, Keyframe
+    , class, className, externalClass
     )
 
 {-|
 
 
-# Definition
+# Definitions
 
-@docs CSS
+@docs Variable, Class, ClassName, ExternalClass, Property, AtRule, Keyframe
 
 
 # Methods
 
-@docs css, descendantClass
+@docs class, className, externalClass
 
 -}
 
@@ -21,32 +21,61 @@ import CSS.Internal as Internal
 
 
 
--- Definition
+-- DEFINITIONS
 
 
-{-| Represents the CSS stucture.
--}
-type alias CSS =
-    Internal.CSS
+type alias Variable =
+    Internal.Variable
+
+
+type alias Class =
+    Internal.Class
+
+
+type alias ClassName =
+    Internal.ClassName
+
+
+type alias ExternalClass =
+    Internal.ExternalClass
+
+
+type alias Property =
+    Internal.Property
+
+
+type alias AtRule =
+    Internal.AtRule
+
+
+type alias Keyframe =
+    Internal.Keyframe
 
 
 
--- Methods
+-- METHODS
 
 
 {-| Start a new class definition.
 -}
-css : String -> CSS
-css =
-    Internal.css
-
-
-{-| Start a new descendant class definition.
--}
-descendantClass : String -> (CSS -> CSS) -> CSS -> CSS
-descendantClass descendantClassName value (Internal.CSS details) =
-    Internal.CSS
-        { details
-            | descendantClasses =
-                ( descendantClassName, value ) :: details.descendantClasses
+class : String -> List Property -> Class
+class name properties =
+    Internal.Class
+        { name = name
+        , properties = properties
+        , pseudoClasses = []
+        , pseudoElements = []
+        , atRules = []
         }
+
+
+className : String -> ClassName
+className =
+    Internal.ClassName
+
+
+{-| Placeholder for a external class definition.
+-}
+externalClass : String -> ExternalClass
+externalClass =
+    Internal.ExternalClass

@@ -40,11 +40,11 @@ Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/align-items>
 
 -}
 
-import CSS.Internal exposing (CSS)
+import CSS.Internal exposing (Property)
 import CSS.Properties as Properties
 
 
-property : String -> CSS -> CSS
+property : String -> Property
 property =
     Properties.custom "align-items"
 
@@ -67,7 +67,7 @@ property =
   - The property doesn't apply to block-level boxes, and to table cells.
 
 -}
-normal : CSS -> CSS
+normal : Property
 normal =
     property "normal"
 
@@ -75,7 +75,7 @@ normal =
 {-| Flex items are stretched such that the cross-size of the item's margin box
 is the same as the line while respecting width and height constraints.
 -}
-stretch : CSS -> CSS
+stretch : Property
 stretch =
     property "stretch"
 
@@ -88,7 +88,7 @@ stretch =
 If the cross-size of an item is larger than the flex container, it will overflow
 equally in both directions.
 -}
-center : Maybe OverflowPosition -> CSS -> CSS
+center : Maybe OverflowPosition -> Property
 center maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "center")
 
@@ -96,7 +96,7 @@ center maybeOverflowPosition =
 {-| The items are packed flush to each other toward the start edge of the
 alignment container in the appropriate axis.
 -}
-start : Maybe OverflowPosition -> CSS -> CSS
+start : Maybe OverflowPosition -> Property
 start maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "start")
 
@@ -104,7 +104,7 @@ start maybeOverflowPosition =
 {-| The items are packed flush to each other toward the end edge of the
 alignment container in the appropriate axis.
 -}
-end : Maybe OverflowPosition -> CSS -> CSS
+end : Maybe OverflowPosition -> Property
 end maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "end")
 
@@ -112,7 +112,7 @@ end maybeOverflowPosition =
 {-| The items are packed flush to the edge of the alignment container of the
 start side of the item, in the appropriate axis.
 -}
-selfStart : Maybe OverflowPosition -> CSS -> CSS
+selfStart : Maybe OverflowPosition -> Property
 selfStart maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "self-start")
 
@@ -120,7 +120,7 @@ selfStart maybeOverflowPosition =
 {-| The items are packed flush to the edge of the alignment container of the end
 side of the item, in the appropriate axis.
 -}
-selfEnd : Maybe OverflowPosition -> CSS -> CSS
+selfEnd : Maybe OverflowPosition -> Property
 selfEnd maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "self-end")
 
@@ -128,7 +128,7 @@ selfEnd maybeOverflowPosition =
 {-| The cross-start margin edges of the flex items are flushed with the
 cross-start edge of the line.
 -}
-flexStart : Maybe OverflowPosition -> CSS -> CSS
+flexStart : Maybe OverflowPosition -> Property
 flexStart maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "flex-start")
 
@@ -136,7 +136,7 @@ flexStart maybeOverflowPosition =
 {-| The cross-end margin edges of the flex items are flushed with the cross-end
 edge of the line.
 -}
-flexEnd : Maybe OverflowPosition -> CSS -> CSS
+flexEnd : Maybe OverflowPosition -> Property
 flexEnd maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "flex-end")
 
@@ -149,7 +149,7 @@ flexEnd maybeOverflowPosition =
 The item with the largest distance between its cross-start margin edge and its
 baseline is flushed with the cross-start edge of the line.
 -}
-baseline : CSS -> CSS
+baseline : Property
 baseline =
     property "baseline"
 
@@ -158,7 +158,7 @@ baseline =
 The item with the largest distance between its cross-start margin edge and its
 baseline is flushed with the cross-start edge of the line.
 -}
-firstBaseline : CSS -> CSS
+firstBaseline : Property
 firstBaseline =
     property "first baseline"
 
@@ -167,7 +167,7 @@ firstBaseline =
 The item with the largest distance between its cross-start margin edge and its
 baseline is flushed with the cross-start edge of the line.
 -}
-lastBaseline : CSS -> CSS
+lastBaseline : Property
 lastBaseline =
     property "last baseline"
 
@@ -206,7 +206,7 @@ property from its parent element.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/inherit>
 
 -}
-inherit : CSS -> CSS
+inherit : Property
 inherit =
     property "inherit"
 
@@ -217,7 +217,7 @@ to an element.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/initial>
 
 -}
-initial : CSS -> CSS
+initial : Property
 initial =
     property "initial"
 
@@ -229,7 +229,7 @@ made by the current style origin to the current element.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/revert>
 
 -}
-revert : CSS -> CSS
+revert : Property
 revert =
     property "revert"
 
@@ -241,7 +241,7 @@ previous cascade layer.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/revert-layer>
 
 -}
-revertLayer : CSS -> CSS
+revertLayer : Property
 revertLayer =
     property "revert-layer"
 
@@ -252,6 +252,6 @@ property naturally inherits from its parent, and to its initial value if not.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/unset>
 
 -}
-unset : CSS -> CSS
+unset : Property
 unset =
     property "unset"

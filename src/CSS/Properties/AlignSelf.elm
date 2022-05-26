@@ -39,11 +39,11 @@ Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/align-self>
 
 -}
 
-import CSS.Internal exposing (CSS)
+import CSS.Internal exposing (Property)
 import CSS.Properties as Properties
 
 
-property : String -> CSS -> CSS
+property : String -> Property
 property =
     Properties.custom "align-self"
 
@@ -54,7 +54,7 @@ property =
 
 {-| Computes to the parent's align-items value.
 -}
-auto : CSS -> CSS
+auto : Property
 auto =
     property "auto"
 
@@ -73,7 +73,7 @@ auto =
   - The property doesn't apply to block-level boxes, and to table cells.
 
 -}
-normal : CSS -> CSS
+normal : Property
 normal =
     property "normal"
 
@@ -86,21 +86,21 @@ normal =
 If the cross-size of the item is larger than the flex container, it will overflow
 equally in both directions.
 -}
-center : Maybe OverflowPosition -> CSS -> CSS
+center : Maybe OverflowPosition -> Property
 center maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "center")
 
 
 {-| Put the item at the start.
 -}
-start : Maybe OverflowPosition -> CSS -> CSS
+start : Maybe OverflowPosition -> Property
 start maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "start")
 
 
 {-| Put the item at the end.
 -}
-end : Maybe OverflowPosition -> CSS -> CSS
+end : Maybe OverflowPosition -> Property
 end maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "end")
 
@@ -108,7 +108,7 @@ end maybeOverflowPosition =
 {-| Aligns the items to be flush with the edge of the alignment container
 corresponding to the item's start side in the cross axis.
 -}
-selfStart : Maybe OverflowPosition -> CSS -> CSS
+selfStart : Maybe OverflowPosition -> Property
 selfStart maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "self-start")
 
@@ -116,7 +116,7 @@ selfStart maybeOverflowPosition =
 {-| Aligns the items to be flush with the edge of the alignment container
 corresponding to the item's end side in the cross axis.
 -}
-selfEnd : Maybe OverflowPosition -> CSS -> CSS
+selfEnd : Maybe OverflowPosition -> Property
 selfEnd maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "self-end")
 
@@ -124,7 +124,7 @@ selfEnd maybeOverflowPosition =
 {-| The cross-start margin edge of the flex item is flushed with the cross-start
 edge of the line.
 -}
-flexStart : Maybe OverflowPosition -> CSS -> CSS
+flexStart : Maybe OverflowPosition -> Property
 flexStart maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "flex-start")
 
@@ -132,7 +132,7 @@ flexStart maybeOverflowPosition =
 {-| The cross-end margin edge of the flex item is flushed with the cross-end
 edge of the line.
 -}
-flexEnd : Maybe OverflowPosition -> CSS -> CSS
+flexEnd : Maybe OverflowPosition -> Property
 flexEnd maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "flex-end")
 
@@ -147,7 +147,7 @@ corresponding baseline in the shared first or last baseline set of all the boxes
 in its baseline-sharing group. The fallback alignment for first baseline is
 start, the one for last baseline is end.
 -}
-baseline : CSS -> CSS
+baseline : Property
 baseline =
     property "baseline"
 
@@ -158,7 +158,7 @@ corresponding baseline in the shared first or last baseline set of all the boxes
 in its baseline-sharing group. The fallback alignment for first baseline is
 start, the one for last baseline is end.
 -}
-firstBaseline : CSS -> CSS
+firstBaseline : Property
 firstBaseline =
     property "first baseline"
 
@@ -169,7 +169,7 @@ corresponding baseline in the shared first or last baseline set of all the boxes
 in its baseline-sharing group. The fallback alignment for first baseline is
 start, the one for last baseline is end.
 -}
-lastBaseline : CSS -> CSS
+lastBaseline : Property
 lastBaseline =
     property "last baseline"
 
@@ -180,7 +180,7 @@ equally (not proportionally), while still respecting the constraints imposed by
 max-height/max-width (or equivalent functionality), so that the combined size of
 all auto-sized items exactly fills the alignment container along the cross axis.
 -}
-stretch : CSS -> CSS
+stretch : Property
 stretch =
     property "stretch"
 
@@ -219,7 +219,7 @@ property from its parent element.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/inherit>
 
 -}
-inherit : CSS -> CSS
+inherit : Property
 inherit =
     property "inherit"
 
@@ -230,7 +230,7 @@ to an element.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/initial>
 
 -}
-initial : CSS -> CSS
+initial : Property
 initial =
     property "initial"
 
@@ -242,7 +242,7 @@ made by the current style origin to the current element.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/revert>
 
 -}
-revert : CSS -> CSS
+revert : Property
 revert =
     property "revert"
 
@@ -254,7 +254,7 @@ previous cascade layer.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/revert-layer>
 
 -}
-revertLayer : CSS -> CSS
+revertLayer : Property
 revertLayer =
     property "revert-layer"
 
@@ -265,6 +265,6 @@ property naturally inherits from its parent, and to its initial value if not.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/unset>
 
 -}
-unset : CSS -> CSS
+unset : Property
 unset =
     property "unset"

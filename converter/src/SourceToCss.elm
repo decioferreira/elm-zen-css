@@ -92,7 +92,7 @@ messageReceiverDeclaration =
 mainDeclaration : List (Node Declaration) -> Node Declaration
 mainDeclaration declarations =
     let
-        cssVariableDeclarations =
+        classDeclarations =
             List.filterMap
                 (\declaration ->
                     case declaration of
@@ -100,10 +100,10 @@ mainDeclaration declarations =
                             case functionDeclaration.signature of
                                 Just (Node _ signature) ->
                                     case signature.typeAnnotation of
-                                        Node _ (TypeAnnotation.Typed (Node _ ( [], "Variable" )) []) ->
+                                        Node _ (TypeAnnotation.Typed (Node _ ( [], "Class" )) []) ->
                                             Just (declarationHelper functionDeclaration)
 
-                                        Node _ (TypeAnnotation.Typed (Node _ ( [ "CSS" ], "Variable" )) []) ->
+                                        Node _ (TypeAnnotation.Typed (Node _ ( [ "CSS" ], "Class" )) []) ->
                                             Just (declarationHelper functionDeclaration)
 
                                         _ ->
@@ -117,7 +117,7 @@ mainDeclaration declarations =
                 )
                 declarations
 
-        classDeclarations =
+        keyframeDeclarations =
             List.filterMap
                 (\declaration ->
                     case declaration of
@@ -125,10 +125,35 @@ mainDeclaration declarations =
                             case functionDeclaration.signature of
                                 Just (Node _ signature) ->
                                     case signature.typeAnnotation of
-                                        Node _ (TypeAnnotation.Typed (Node _ ( [], "CSS" )) []) ->
+                                        Node _ (TypeAnnotation.Typed (Node _ ( [], "Keyframe" )) []) ->
                                             Just (declarationHelper functionDeclaration)
 
-                                        Node _ (TypeAnnotation.Typed (Node _ ( [ "CSS" ], "CSS" )) []) ->
+                                        Node _ (TypeAnnotation.Typed (Node _ ( [ "CSS" ], "Keyframe" )) []) ->
+                                            Just (declarationHelper functionDeclaration)
+
+                                        _ ->
+                                            Nothing
+
+                                _ ->
+                                    Nothing
+
+                        _ ->
+                            Nothing
+                )
+                declarations
+
+        variableDeclarations =
+            List.filterMap
+                (\declaration ->
+                    case declaration of
+                        Node _ (Declaration.FunctionDeclaration functionDeclaration) ->
+                            case functionDeclaration.signature of
+                                Just (Node _ signature) ->
+                                    case signature.typeAnnotation of
+                                        Node _ (TypeAnnotation.Typed (Node _ ( [], "Variable" )) []) ->
+                                            Just (declarationHelper functionDeclaration)
+
+                                        Node _ (TypeAnnotation.Typed (Node _ ( [ "CSS" ], "Variable" )) []) ->
                                             Just (declarationHelper functionDeclaration)
 
                                         _ ->
@@ -185,8 +210,22 @@ mainDeclaration declarations =
                                                                                 (node
                                                                                     (Expression.Application
                                                                                         [ node (Expression.FunctionOrValue [ "CSS", "Internal" ] "toString")
-                                                                                        , node (Expression.ListExpr cssVariableDeclarations)
-                                                                                        , node (Expression.ListExpr classDeclarations)
+                                                                                        , node
+                                                                                            (Expression.RecordExpr
+                                                                                                [ node
+                                                                                                    ( node "classes"
+                                                                                                    , node (Expression.ListExpr classDeclarations)
+                                                                                                    )
+                                                                                                , node
+                                                                                                    ( node "keyframes"
+                                                                                                    , node (Expression.ListExpr keyframeDeclarations)
+                                                                                                    )
+                                                                                                , node
+                                                                                                    ( node "variables"
+                                                                                                    , node (Expression.ListExpr variableDeclarations)
+                                                                                                    )
+                                                                                                ]
+                                                                                            )
                                                                                         ]
                                                                                     )
                                                                                 )

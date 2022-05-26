@@ -3,10 +3,12 @@ module SourceToProd exposing (sourceToProd)
 import Elm.Parser
 import Elm.Processing
 import Elm.Syntax.Declaration as Declaration exposing (Declaration)
+import Elm.Syntax.Exposing as Exposing
 import Elm.Syntax.Expression as Expression exposing (Expression)
 import Elm.Syntax.Infix as Infix
 import Elm.Syntax.Module as Module
 import Elm.Syntax.Node exposing (Node(..))
+import Elm.Syntax.Range as Range
 import Elm.Syntax.TypeAnnotation as TypeAnnotation
 import Elm.Writer
 import Helpers
@@ -23,36 +25,47 @@ sourceToProd data =
                             | moduleDefinition =
                                 case file.moduleDefinition of
                                     Node range (Module.NormalModule defaultModuleData) ->
-                                        let
-                                            (Node moduleNameRange _) =
-                                                defaultModuleData.moduleName
-                                        in
-                                        Node range (Module.NormalModule { defaultModuleData | moduleName = Node moduleNameRange data.name })
+                                        Node range
+                                            (Module.NormalModule
+                                                { defaultModuleData
+                                                    | moduleName = Node Range.emptyRange data.name
+                                                    , exposingList =
+                                                        case defaultModuleData.exposingList of
+                                                            Node _ (Exposing.Explicit exposedList) ->
+                                                                Node Range.emptyRange
+                                                                    (Exposing.Explicit
+                                                                        (exposedList
+                                                                            |> List.map (\(Node _ topLevelExpose) -> Node Range.emptyRange topLevelExpose)
+                                                                        )
+                                                                    )
+
+                                                            _ ->
+                                                                defaultModuleData.exposingList
+                                                }
+                                            )
 
                                     Node range (Module.PortModule defaultModuleData) ->
-                                        let
-                                            (Node moduleNameRange _) =
-                                                defaultModuleData.moduleName
-                                        in
-                                        Node range (Module.PortModule { defaultModuleData | moduleName = Node moduleNameRange data.name })
+                                        Node range
+                                            (Module.PortModule
+                                                { defaultModuleData
+                                                    | moduleName = Node Range.emptyRange data.name
+                                                }
+                                            )
 
                                     Node range (Module.EffectModule effectModuleData) ->
-                                        let
-                                            (Node moduleNameRange _) =
-                                                effectModuleData.moduleName
-                                        in
-                                        Node range (Module.EffectModule { effectModuleData | moduleName = Node moduleNameRange data.name })
+                                        Node range
+                                            (Module.EffectModule
+                                                { effectModuleData
+                                                    | moduleName = Node Range.emptyRange data.name
+                                                }
+                                            )
                             , imports =
-                                file.imports
-                                    |> List.filter
-                                        (\(Node _ { moduleName }) ->
-                                            case moduleName of
-                                                Node _ ("CSS" :: _ :: _) ->
-                                                    False
-
-                                                _ ->
-                                                    True
-                                        )
+                                [ Node Range.emptyRange
+                                    { exposingList = Nothing
+                                    , moduleAlias = Nothing
+                                    , moduleName = Node Range.emptyRange [ "CSS" ]
+                                    }
+                                ]
                             , declarations =
                                 file.declarations
                                     |> List.filterMap
@@ -62,10 +75,10 @@ sourceToProd data =
                                                     case function.signature of
                                                         Just (Node _ signature) ->
                                                             case signature.typeAnnotation of
-                                                                Node _ (TypeAnnotation.Typed (Node _ ( [], "CSS" )) []) ->
+                                                                Node _ (TypeAnnotation.Typed (Node _ ( [], "Class" )) []) ->
                                                                     Just (Node range (cssOnly function))
 
-                                                                Node _ (TypeAnnotation.Typed (Node _ ( [ "CSS" ], "CSS" )) []) ->
+                                                                Node _ (TypeAnnotation.Typed (Node _ ( [ "CSS" ], "Class" )) []) ->
                                                                     Just (Node range (cssOnly function))
 
                                                                 _ ->
@@ -89,7 +102,21 @@ cssOnly : Expression.Function -> Declaration
 cssOnly function =
     Declaration.FunctionDeclaration
         { function
-            | declaration =
+            | signature =
+                function.signature
+                    |> Maybe.map
+                        (\(Node range signature) ->
+                            Node range
+                                { signature
+                                    | typeAnnotation =
+                                        Node Range.emptyRange
+                                            (TypeAnnotation.Typed
+                                                (Node Range.emptyRange ( [ "CSS" ], "ClassName" ))
+                                                []
+                                            )
+                                }
+                        )
+            , declaration =
                 case function.declaration of
                     Node range functionImplementation ->
                         Node range { functionImplementation | expression = extractNestedNode functionImplementation.expression }
@@ -101,6 +128,14 @@ extractNestedNode nodeExpression =
     case nodeExpression of
         Node _ (Expression.OperatorApplication "|>" Infix.Left leftNode _) ->
             extractNestedNode leftNode
+
+        Node range (Expression.Application ((Node functionRange (Expression.FunctionOrValue [ "CSS" ] "class")) :: (Node nameRange (Expression.Literal className)) :: _)) ->
+            Node range
+                (Expression.Application
+                    [ Node functionRange (Expression.FunctionOrValue [ "CSS" ] "className")
+                    , Node nameRange (Expression.Literal className)
+                    ]
+                )
 
         _ ->
             nodeExpression

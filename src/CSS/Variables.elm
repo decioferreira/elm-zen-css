@@ -1,29 +1,24 @@
-module CSS.Variables exposing (Variable, variable, var)
+module CSS.Variables exposing (variable, var)
 
 {-|
 
 
 # Variables
 
-@docs Variable, variable, var
+@docs variable, var
 
 -}
 
-import CSS.Variables.Internal as Internal
+import CSS.Internal as Internal
 
 
 {-| -}
-type alias Variable =
-    Internal.Variable
-
-
-{-| -}
-variable : String -> String -> Variable
+variable : String -> String -> Internal.Variable
 variable =
     Internal.Variable
 
 
 {-| -}
-var : Variable -> String
+var : Internal.Variable -> String
 var (Internal.Variable name _) =
     "var(--" ++ name ++ ")"

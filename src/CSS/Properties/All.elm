@@ -14,11 +14,11 @@ Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/all>
 
 -}
 
-import CSS.Internal exposing (CSS)
+import CSS.Internal exposing (Property)
 import CSS.Properties as Properties
 
 
-property : String -> CSS -> CSS
+property : String -> Property
 property =
     Properties.custom "all"
 
@@ -30,7 +30,7 @@ property =
 {-| Specifies that all the element's properties should be changed to their
 inherited values.
 -}
-inherit : CSS -> CSS
+inherit : Property
 inherit =
     property "inherit"
 
@@ -38,7 +38,7 @@ inherit =
 {-| Specifies that all the element's properties should be changed to their
 initial values.
 -}
-initial : CSS -> CSS
+initial : Property
 initial =
     property "initial"
 
@@ -57,7 +57,7 @@ declaration belongs:
     unset.
 
 -}
-revert : CSS -> CSS
+revert : Property
 revert =
     property "revert"
 
@@ -67,7 +67,7 @@ a previous cascade layer, if one exists. If no other cascade layer exists, the
 element's properties will roll back to the matching rule, if one exists, in the
 current layer or to a previous style origin.
 -}
-revertLayer : CSS -> CSS
+revertLayer : Property
 revertLayer =
     property "revert-layer"
 
@@ -75,6 +75,6 @@ revertLayer =
 {-| Specifies that all the element's properties should be changed to their
 inherited values if they inherit by default, or to their initial values if not.
 -}
-unset : CSS -> CSS
+unset : Property
 unset =
     property "unset"

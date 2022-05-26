@@ -44,11 +44,11 @@ Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/align-content>
 
 -}
 
-import CSS.Internal exposing (CSS)
+import CSS.Internal exposing (Property)
 import CSS.Properties as Properties
 
 
-property : String -> CSS -> CSS
+property : String -> Property
 property =
     Properties.custom "align-content"
 
@@ -60,7 +60,7 @@ property =
 {-| The items are packed flush to each other in the center of the alignment
 container along the cross axis.
 -}
-center : Maybe OverflowPosition -> CSS -> CSS
+center : Maybe OverflowPosition -> Property
 center maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "center")
 
@@ -68,7 +68,7 @@ center maybeOverflowPosition =
 {-| The items are packed flush to each other against the start edge of the
 alignment container in the cross axis.
 -}
-start : Maybe OverflowPosition -> CSS -> CSS
+start : Maybe OverflowPosition -> Property
 start maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "start")
 
@@ -76,7 +76,7 @@ start maybeOverflowPosition =
 {-| The items are packed flush to each other against the end edge of the
 alignment container in the cross axis.
 -}
-end : Maybe OverflowPosition -> CSS -> CSS
+end : Maybe OverflowPosition -> Property
 end maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "end")
 
@@ -86,7 +86,7 @@ container depending on the flex container's cross-start side. This only applies
 to flex layout items. For items that are not children of a flex container, this
 value is treated like start.
 -}
-flexStart : Maybe OverflowPosition -> CSS -> CSS
+flexStart : Maybe OverflowPosition -> Property
 flexStart maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "flex-start")
 
@@ -96,7 +96,7 @@ container depending on the flex container's cross-end side. This only applies to
 flex layout items. For items that are not children of a flex container, this
 value is treated like end.
 -}
-flexEnd : Maybe OverflowPosition -> CSS -> CSS
+flexEnd : Maybe OverflowPosition -> Property
 flexEnd maybeOverflowPosition =
     property (overflowPositionHelper maybeOverflowPosition "flex-end")
 
@@ -108,7 +108,7 @@ flexEnd maybeOverflowPosition =
 {-| The items are packed in their default position as if no align-content value
 was set.
 -}
-normal : CSS -> CSS
+normal : Property
 normal =
     property "normal"
 
@@ -122,7 +122,7 @@ alignment baseline of the box's first or last baseline set with the
 corresponding baseline in the shared first or last baseline set of all the boxes
 in its baseline-sharing group.
 -}
-baseline : CSS -> CSS
+baseline : Property
 baseline =
     property "baseline"
 
@@ -132,7 +132,7 @@ alignment baseline of the box's first or last baseline set with the
 corresponding baseline in the shared first or last baseline set of all the boxes
 in its baseline-sharing group.
 -}
-firstBaseline : CSS -> CSS
+firstBaseline : Property
 firstBaseline =
     property "first baseline"
 
@@ -142,7 +142,7 @@ alignment baseline of the box's first or last baseline set with the
 corresponding baseline in the shared first or last baseline set of all the boxes
 in its baseline-sharing group.
 -}
-lastBaseline : CSS -> CSS
+lastBaseline : Property
 lastBaseline =
     property "last baseline"
 
@@ -157,7 +157,7 @@ first item is flush with the start edge of the alignment container in the cross
 axis, and the last item is flush with the end edge of the alignment container in
 the cross axis.
 -}
-spaceBetween : CSS -> CSS
+spaceBetween : Property
 spaceBetween =
     property "space-between"
 
@@ -167,7 +167,7 @@ cross axis. The spacing between each pair of adjacent items is the same. The
 empty space before the first and after the last item equals half of the space
 between each pair of adjacent items.
 -}
-spaceAround : CSS -> CSS
+spaceAround : Property
 spaceAround =
     property "space-around"
 
@@ -176,7 +176,7 @@ spaceAround =
 cross axis. The spacing between each pair of adjacent items, the start edge and
 the first item, and the end edge and the last item, are all exactly the same.
 -}
-spaceEvenly : CSS -> CSS
+spaceEvenly : Property
 spaceEvenly =
     property "space-evenly"
 
@@ -187,7 +187,7 @@ equally (not proportionally), while still respecting the constraints imposed by
 max-height/max-width (or equivalent functionality), so that the combined size
 exactly fills the alignment container along the cross axis.
 -}
-stretch : CSS -> CSS
+stretch : Property
 stretch =
     property "stretch"
 
@@ -226,7 +226,7 @@ property from its parent element.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/inherit>
 
 -}
-inherit : CSS -> CSS
+inherit : Property
 inherit =
     property "inherit"
 
@@ -237,7 +237,7 @@ to an element.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/initial>
 
 -}
-initial : CSS -> CSS
+initial : Property
 initial =
     property "initial"
 
@@ -249,7 +249,7 @@ made by the current style origin to the current element.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/revert>
 
 -}
-revert : CSS -> CSS
+revert : Property
 revert =
     property "revert"
 
@@ -261,7 +261,7 @@ previous cascade layer.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/revert-layer>
 
 -}
-revertLayer : CSS -> CSS
+revertLayer : Property
 revertLayer =
     property "revert-layer"
 
@@ -272,6 +272,6 @@ property naturally inherits from its parent, and to its initial value if not.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/unset>
 
 -}
-unset : CSS -> CSS
+unset : Property
 unset =
     property "unset"

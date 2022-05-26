@@ -9,10 +9,10 @@ module CSS.Properties exposing (custom)
 
 -}
 
-import CSS.Internal exposing (CSS(..))
+import CSS.Internal exposing (Property)
 
 
 {-| -}
-custom : String -> String -> CSS -> CSS
-custom propertyName value (CSS details) =
-    CSS { details | properties = ( propertyName, value ) :: details.properties }
+custom : String -> String -> Property
+custom =
+    Tuple.pair
