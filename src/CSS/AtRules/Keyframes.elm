@@ -22,6 +22,7 @@ import CSS.Types.Percentage as Percentage
 import List.Nonempty as Nonempty exposing (Nonempty(..))
 
 
+{-| -}
 type Name
     = NameCustomIdent String
     | NameString String
@@ -37,6 +38,7 @@ nameToString name =
             "\"" ++ value ++ "\""
 
 
+{-| -}
 type Selector
     = From
     | To
@@ -56,6 +58,7 @@ selectorToString selector =
             Percentage.toString percentage
 
 
+{-| -}
 custom : Name -> Nonempty { selectors : Nonempty Selector, properties : List Property } -> Keyframe
 custom name blocks =
     Keyframe
@@ -76,6 +79,7 @@ custom name blocks =
         }
 
 
+{-| -}
 fromTo : Name -> List Property -> List Property -> Keyframe
 fromTo name from to =
     custom name
@@ -85,6 +89,7 @@ fromTo name from to =
         )
 
 
+{-| -}
 percentages : Name -> Nonempty { percentages : Nonempty Percentage.Percentage, properties : List Property } -> Keyframe
 percentages name blocks =
     custom name

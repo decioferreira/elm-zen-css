@@ -1,7 +1,6 @@
 module CSS.Properties.Animation exposing
     ( animation
     , SingleAnimation, defaultSingleAnimation
-    , EasingFunction(..), IterationCount(..), Direction(..), FillMode(..), PlayState, Name(..), StepPosition(..)
     )
 
 {-| The animation shorthand CSS property applies an animation between styles. It
@@ -18,15 +17,16 @@ Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/animation>
 
 @docs SingleAnimation, defaultSingleAnimation
 
-
-# Types
-
-@docs EasingFunction, IterationCount, Direction, FillMode, PlayState, Name, StepPosition
-
 -}
 
 import CSS.Internal exposing (Keyframe(..), Property)
 import CSS.Properties as Properties
+import CSS.Properties.Animation.Direction as AnimationDirection exposing (Direction)
+import CSS.Properties.Animation.FillMode as AnimationFillMode exposing (FillMode)
+import CSS.Properties.Animation.IterationCount as AnimationIterationCount exposing (IterationCount)
+import CSS.Properties.Animation.Name as AnimationName exposing (Name)
+import CSS.Properties.Animation.PlayState as AnimationPlayState exposing (PlayState)
+import CSS.Properties.Animation.TimingFunction as AnimationTimingFunction exposing (EasingFunction)
 import CSS.Types.Time as Time exposing (Time)
 import List.Nonempty exposing (Nonempty)
 
@@ -49,6 +49,7 @@ type alias SingleAnimation =
     }
 
 
+{-| -}
 defaultSingleAnimation : SingleAnimation
 defaultSingleAnimation =
     { delay = Nothing
@@ -65,191 +66,16 @@ defaultSingleAnimation =
 singleAnimationToString : SingleAnimation -> String
 singleAnimationToString singleAnimation =
     [ Maybe.map Time.toString singleAnimation.delay
-    , Maybe.map easingFunctionToString singleAnimation.easingFunction
+    , Maybe.map AnimationTimingFunction.easingFunctionToString singleAnimation.easingFunction
     , Maybe.map Time.toString singleAnimation.duration
-    , Maybe.map iterationCountToString singleAnimation.iterationCount
-    , Maybe.map directionToString singleAnimation.direction
-    , Maybe.map fillModeToString singleAnimation.fillMode
-    , Maybe.map playStateToString singleAnimation.playState
-    , Maybe.map nameToString singleAnimation.name
+    , Maybe.map AnimationIterationCount.iterationCountToString singleAnimation.iterationCount
+    , Maybe.map AnimationDirection.directionToString singleAnimation.direction
+    , Maybe.map AnimationFillMode.fillModeToString singleAnimation.fillMode
+    , Maybe.map AnimationPlayState.playStateToString singleAnimation.playState
+    , Maybe.map AnimationName.nameToString singleAnimation.name
     ]
         |> List.filterMap identity
         |> String.join " "
-
-
-{-| -}
-type EasingFunction
-    = Linear
-    | Ease
-    | EaseIn
-    | EaseOut
-    | EaseInOut
-    | CubicBezier Float Float Float Float
-    | StepStart
-    | StepEnd
-    | Steps Int (Maybe StepPosition)
-
-
-easingFunctionToString : EasingFunction -> String
-easingFunctionToString easingFunction =
-    case easingFunction of
-        Linear ->
-            "linear"
-
-        Ease ->
-            "ease"
-
-        EaseIn ->
-            "ease-in"
-
-        EaseOut ->
-            "ease-out"
-
-        EaseInOut ->
-            "ease-in-out"
-
-        CubicBezier _ _ _ _ ->
-            "cubic-bezier()"
-
-        StepStart ->
-            "step-start"
-
-        StepEnd ->
-            "step-end"
-
-        Steps numberOfSteps Nothing ->
-            "steps(" ++ String.fromInt numberOfSteps ++ ")"
-
-        Steps numberOfSteps (Just stepPosition) ->
-            "steps(" ++ String.fromInt numberOfSteps ++ ", " ++ stepPositionToString stepPosition ++ ")"
-
-
-{-| -}
-type IterationCount
-    = Infinite
-    | Count Float
-
-
-iterationCountToString : IterationCount -> String
-iterationCountToString iterationCount =
-    case iterationCount of
-        Infinite ->
-            "infinite"
-
-        Count value ->
-            String.fromFloat value
-
-
-{-| -}
-type Direction
-    = Normal
-    | Reverse
-    | Alternate
-    | AlternateReverse
-
-
-directionToString : Direction -> String
-directionToString direction =
-    case direction of
-        Normal ->
-            "normal"
-
-        Reverse ->
-            "reverse"
-
-        Alternate ->
-            "alternate"
-
-        AlternateReverse ->
-            "alternate-reverse"
-
-
-{-| -}
-type FillMode
-    = FillModeNone
-    | Forwards
-    | Backwards
-    | Both
-
-
-fillModeToString : FillMode -> String
-fillModeToString fillMode =
-    case fillMode of
-        FillModeNone ->
-            "none"
-
-        Forwards ->
-            "forwards"
-
-        Backwards ->
-            "backwards"
-
-        Both ->
-            "both"
-
-
-{-| -}
-type PlayState
-    = Running
-    | Paused
-
-
-playStateToString : PlayState -> String
-playStateToString playState =
-    case playState of
-        Running ->
-            "running"
-
-        Paused ->
-            "paused"
-
-
-{-| -}
-type Name
-    = None
-    | KeyframeName Keyframe
-
-
-nameToString : Name -> String
-nameToString name =
-    case name of
-        None ->
-            "none"
-
-        KeyframeName (Keyframe { identifier }) ->
-            identifier
-
-
-{-| -}
-type StepPosition
-    = JumpStart
-    | JumpEnd
-    | JumpNone
-    | JumpBoth
-    | Start
-    | End
-
-
-stepPositionToString : StepPosition -> String
-stepPositionToString stepPosition =
-    case stepPosition of
-        JumpStart ->
-            "jump-start"
-
-        JumpEnd ->
-            "jump-end"
-
-        JumpNone ->
-            "jump-none"
-
-        JumpBoth ->
-            "jump-both"
-
-        Start ->
-            "start"
-
-        End ->
-            "end"
 
 
 {-| -}

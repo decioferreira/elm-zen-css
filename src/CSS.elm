@@ -24,30 +24,37 @@ import CSS.Internal as Internal
 -- DEFINITIONS
 
 
+{-| -}
 type alias Variable =
     Internal.Variable
 
 
+{-| -}
 type alias Class =
     Internal.Class
 
 
+{-| -}
 type alias ClassName =
     Internal.ClassName
 
 
+{-| -}
 type alias ExternalClass =
     Internal.ExternalClass
 
 
+{-| -}
 type alias Property =
     Internal.Property
 
 
+{-| -}
 type alias AtRule =
     Internal.AtRule
 
 
+{-| -}
 type alias Keyframe =
     Internal.Keyframe
 
@@ -69,6 +76,7 @@ class name properties =
         }
 
 
+{-| -}
 className : String -> ClassName
 className =
     Internal.ClassName

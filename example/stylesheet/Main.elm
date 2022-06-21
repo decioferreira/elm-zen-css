@@ -17,6 +17,10 @@ import CSS.AtRules.Keyframes as Keyframes
 import CSS.Properties as Properties
 import CSS.Properties.AccentColor as AccentColor
 import CSS.Properties.Animation as Animation exposing (defaultSingleAnimation)
+import CSS.Properties.Animation.Direction as AnimationDirection
+import CSS.Properties.Animation.IterationCount as AnimationIterationCount
+import CSS.Properties.Animation.TimingFunction as AnimationTimingFunction
+import CSS.Properties.Animation.Name as AnimationName
 import CSS.PseudoClasses as PseudoClasses
 import CSS.PseudoElements as PseudoElements
 import CSS.Types.Color as Color
@@ -153,11 +157,11 @@ cylonEye =
             (Nonempty.singleton
                 { defaultSingleAnimation
                     | delay = Just (Time.Seconds 4)
-                    , easingFunction = Just Animation.Linear
+                    , easingFunction = Just AnimationTimingFunction.Linear
                     , duration = Just (Time.Seconds 0)
-                    , iterationCount = Just Animation.Infinite
-                    , direction = Just Animation.Alternate
-                    , name = Just (Animation.KeyframeName moveEye)
+                    , iterationCount = Just AnimationIterationCount.Infinite
+                    , direction = Just AnimationDirection.Alternate
+                    , name = Just (AnimationName.Keyframe moveEye)
                 }
             )
         ]
