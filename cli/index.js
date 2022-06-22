@@ -14,6 +14,7 @@ const run = (file, options) => {
 
   if (options.css) {
     app.ports.resultCss.subscribe((data) => {
+      fs.mkdirSync(path.resolve(__dirname, '../converter/tmp/'));
       fs.writeFileSync(path.resolve(__dirname, '../converter/tmp/ExportCss.elm'), data);
 
       let elmMakeSucceeded = false;
