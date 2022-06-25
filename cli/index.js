@@ -3,25 +3,33 @@
 
 const fs = require('fs');
 const path = require('path');
+const tempDir = require('temp-dir');
 const watch = require('node-watch');
 
 const { program } = require('commander');
 const { spawn, execSync } = require('child_process');
 const { Elm } = require(path.resolve(__dirname, './converter.js'));
 
+const temporaryDirectory = () => {
+  const hrTime = process.hrtime();
+  const directory = path.join(tempDir, `elmzencss_${hrTime[0] * 1000000000 + hrTime[1]}`);
+  fs.mkdirSync(directory);
+  return directory;
+}
+
 const run = (file, options) => {
   const app = Elm.Main.init();
+  const tmpDirectory = temporaryDirectory();
 
   if (options.css) {
     app.ports.resultCss.subscribe((data) => {
-      fs.mkdirSync(path.resolve(__dirname, '../converter/tmp/'));
-      fs.writeFileSync(path.resolve(__dirname, '../converter/tmp/ExportCss.elm'), data);
+      fs.writeFileSync(path.resolve(tmpDirectory, 'ExportCss.elm'), data);
 
       let elmMakeSucceeded = false;
 
       try {
         execSync(
-          `pushd ${path.resolve(__dirname, '../converter/')} && elm make tmp/ExportCss.elm --output=tmp/export-css.js --optimize && popd`,
+          `pushd ${path.resolve(__dirname, '../converter/')} && elm make ${tmpDirectory}/ExportCss.elm --output=${tmpDirectory}/export-css.js --optimize && popd`,
           { shell: '/bin/bash', stdio: 'pipe' }
         );
         elmMakeSucceeded = true;
@@ -30,9 +38,9 @@ const run = (file, options) => {
       }
 
       if (elmMakeSucceeded) {
-        delete require.cache[require.resolve('../converter/tmp/export-css.js')];
+        delete require.cache[path.resolve(tmpDirectory, 'export-css.js')];
 
-        const exportCss = require('../converter/tmp/export-css.js');
+        const exportCss = require(`${tmpDirectory}/export-css.js`);
         const exportCssApp = exportCss.Elm.ExportCss.init();
 
         exportCssApp.ports.sendMessage.subscribe((data) => {
