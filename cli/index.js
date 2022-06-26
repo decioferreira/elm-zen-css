@@ -29,7 +29,7 @@ const run = (file, options) => {
 
       try {
         execSync(
-          `pushd ${path.resolve(__dirname, '../converter/')} && elm make ${tmpDirectory}/ExportCss.elm --output=${tmpDirectory}/export-css.js --optimize && popd`,
+          `elm make ${tmpDirectory}/ExportCss.elm --output=${tmpDirectory}/export-css.js --optimize`,
           { shell: '/bin/bash', stdio: 'pipe' }
         );
         elmMakeSucceeded = true;
