@@ -7,7 +7,7 @@
     "elm-live": "^4.0.2"
   },
   "scripts": {
-    "css": "../cli/index.js stylesheet/Main.elm --watch --css app.css --elm src/Classes.elm",
+    "css": "../cli/index.js stylesheet/Main.elm --watch --css app.css --elm src/Classes.elm --elmjson stylesheet/elm.json",
     "live": "elm-live src/Main.elm --open -- --output=app.js"
   }
 }

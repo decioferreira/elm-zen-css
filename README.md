@@ -15,13 +15,14 @@ Usage: cli [options] <stylesheet-elm-file>
 Elm Zen CSS
 
 Arguments:
-  stylesheet-elm-file  watch file changes
+  stylesheet-elm-file       watch file changes
 
 Options:
-  --css <css-file>     output CSS file
-  --prod <prod-file>   output production version file
-  --watch              watch file changes
-  -h, --help           display help for command
+  -c, --css <css-file>      output CSS file
+  -e, --elm <elm-file>      output production version file
+  -w, --watch               watch file changes
+  -j, --elmjson <elm-json>  use a custom elm-json file
+  -h, --help                display help for command
 ```
 
 ## Example

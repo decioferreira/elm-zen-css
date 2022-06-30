@@ -30,7 +30,10 @@ const run = (file, options) => {
       try {
         execSync(
           `elm make ${tmpDirectory}/ExportCss.elm --output=${tmpDirectory}/export-css.js --optimize`,
-          { shell: '/bin/bash', stdio: 'pipe' }
+          {
+            shell: '/bin/bash', stdio: 'pipe',
+            cwd: options.elmjson ? path.dirname(options.elmjson) : __dirname
+          }
         );
         elmMakeSucceeded = true;
       } catch (error) {
@@ -71,6 +74,7 @@ program
   .option('-c, --css <css-file>', 'output CSS file')
   .option('-e, --elm <elm-file>', 'output production version file')
   .option('-w, --watch', 'watch file changes')
+  .option('-j, --elmjson <elm-json>', 'use a custom elm-json file')
   .argument('<stylesheet-elm-file>', 'watch file changes')
   .action((file, options) => {
     if (options.watch) {
