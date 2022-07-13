@@ -14,7 +14,7 @@ elm-zen-css stylesheet/Main.elm --watch --css app.css --elm src/Classes.elm
 
 When the content of the `stylesheet/Main.elm` is the following:
 
-```
+```elm
 module Main exposing ( strong )
 
 import CSS exposing (Class)
@@ -30,13 +30,13 @@ strong =
 
 The result will be the following two files, `app.css`:
 
-```
+```css
 .strong {font-weight: bold}
 ```
 
 And `src/Classes.elm`:
 
-```
+```elm
 module Classes exposing (strong)
 
 import CSS
@@ -49,7 +49,7 @@ strong  =
 
 This last file (ie. `Classes` module), can then the used in the following way:
 
-```
+```elm
 module Main exposing (main)
 
 import CSS.Attributes
