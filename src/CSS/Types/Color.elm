@@ -1145,7 +1145,7 @@ This lets you use the color value on properties that do not receive it by defaul
 -}
 currentColor : Color
 currentColor =
-    Color "currentColor"
+    Color "currentcolor"
 
 
 
