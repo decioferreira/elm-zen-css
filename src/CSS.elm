@@ -1,6 +1,6 @@
 module CSS exposing
-    ( Variable, Class, ClassName, ExternalClass, Property, AtRule, Keyframe
-    , class, className, externalClass
+    ( Variable, Class, ClassName, Property, AtRule, Keyframe
+    , class, className
     )
 
 {-|
@@ -8,12 +8,12 @@ module CSS exposing
 
 # Definitions
 
-@docs Variable, Class, ClassName, ExternalClass, Property, AtRule, Keyframe
+@docs Variable, Class, ClassName, Property, AtRule, Keyframe
 
 
 # Methods
 
-@docs class, className, externalClass
+@docs class, className
 
 -}
 
@@ -37,11 +37,6 @@ type alias Class =
 {-| -}
 type alias ClassName =
     Internal.ClassName
-
-
-{-| -}
-type alias ExternalClass =
-    Internal.ExternalClass
 
 
 {-| -}
@@ -76,14 +71,13 @@ class name properties =
         }
 
 
-{-| -}
+{-| Function that allows for a definition of the classname, without its associated definition.
+This is used as part of the "exported" module used in the production code.
+
+This can also be used, directly in the production code, as a placeholder for a external class
+definition.
+
+-}
 className : String -> ClassName
 className =
     Internal.ClassName
-
-
-{-| Placeholder for a external class definition.
--}
-externalClass : String -> ExternalClass
-externalClass =
-    Internal.ExternalClass

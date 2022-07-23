@@ -1,5 +1,5 @@
 module CSS.Internal exposing
-    ( Variable(..), Class(..), ClassName(..), ExternalClass(..), Property, AtRule(..), Keyframe(..)
+    ( Variable(..), Class(..), ClassName(..), Property, AtRule(..), Keyframe(..)
     , toString
     )
 
@@ -8,7 +8,7 @@ module CSS.Internal exposing
 
 # Definition
 
-@docs Variable, Class, ClassName, ExternalClass, Property, AtRule, Keyframe
+@docs Variable, Class, ClassName, Property, AtRule, Keyframe
 
 
 # To String
@@ -36,10 +36,6 @@ type Class
 
 type ClassName
     = ClassName String
-
-
-type ExternalClass
-    = ExternalClass String
 
 
 type alias Property =
