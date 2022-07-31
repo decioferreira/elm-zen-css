@@ -13,5 +13,8 @@
   "bin": "./cli/index.js",
   "scripts": {
     "prepare": "pushd converter && elm make src/Main.elm --output=../cli/converter.js --optimize && popd"
+  },
+  "devDependencies": {
+    "elm-review": "^2.7.3"
   }
 }
