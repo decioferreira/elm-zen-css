@@ -1,6 +1,6 @@
 module CSS.Types.Position exposing
     ( Position(..), toString
-    , Value(..), Horizontal(..), Vertical(..)
+    , Horizontal(..), Vertical(..)
     )
 
 {-| The <time> CSS data type represents a time value expressed in seconds or milliseconds.
@@ -9,12 +9,11 @@ It is used in animation, transition, and related properties.
 Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/position_value>
 
 @docs Position, toString
-@docs Value, Horizontal, Vertical
+@docs Horizontal, Vertical
 
 -}
 
-import CSS.Types.Length
-import CSS.Types.Percentage
+import CSS.Types.LengthPercentage as LengthPercentage exposing (LengthPercentage)
 
 
 {-| <position> data type.
@@ -29,24 +28,8 @@ type Position
     | LeftBottom
     | CenterBottom
     | RightBottom
-    | XAxis Value
-    | BothAxis ( Horizontal, Value ) ( Vertical, Value )
-
-
-{-| -}
-type Value
-    = Percentage CSS.Types.Percentage.Percentage
-    | Length CSS.Types.Length.Length
-
-
-valueToString : Value -> String
-valueToString value =
-    case value of
-        Percentage percentage ->
-            CSS.Types.Percentage.toString percentage
-
-        Length length ->
-            CSS.Types.Length.toString length
+    | XAxis LengthPercentage
+    | BothAxis ( Horizontal, LengthPercentage ) ( Vertical, LengthPercentage )
 
 
 {-| -}
@@ -112,14 +95,14 @@ toString position =
         RightBottom ->
             "right bottom"
 
-        XAxis value ->
-            valueToString value
+        XAxis lengthPercentage ->
+            LengthPercentage.toString lengthPercentage
 
-        BothAxis ( horizontal, horizontalValue ) ( vertical, verticalValue ) ->
+        BothAxis ( horizontal, horizontalLengthPercentage ) ( vertical, verticalLengthPercentage ) ->
             horizontalToString horizontal
                 ++ " "
-                ++ valueToString horizontalValue
+                ++ LengthPercentage.toString horizontalLengthPercentage
                 ++ " "
                 ++ verticalToString vertical
                 ++ " "
-                ++ valueToString verticalValue
+                ++ LengthPercentage.toString verticalLengthPercentage

@@ -3,7 +3,7 @@ module CSS.Properties.Background.Position.X exposing
     , leftRelative, rightRelative
     , multiple
     , inherit, initial, revert, revertLayer, unset
-    , X(..), Value(..)
+    , X(..)
     )
 
 {-| The `background-position-x` CSS property sets the initial horizontal position for each
@@ -34,14 +34,13 @@ Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/background-position-x>
 
 # Types
 
-@docs X, Value
+@docs X
 
 -}
 
 import CSS.Internal exposing (Property)
 import CSS.Properties as Properties
-import CSS.Types.Length
-import CSS.Types.Percentage
+import CSS.Types.LengthPercentage as LengthPercentage exposing (LengthPercentage)
 import List.Nonempty exposing (Nonempty)
 
 
@@ -55,25 +54,9 @@ type X
     = Left
     | Center
     | Right
-    | Value Value
-    | LeftRelative Value
-    | RightRelative Value
-
-
-{-| -}
-type Value
-    = Percentage CSS.Types.Percentage.Percentage
-    | Length CSS.Types.Length.Length
-
-
-valueToString : Value -> String
-valueToString v =
-    case v of
-        Percentage percentage ->
-            CSS.Types.Percentage.toString percentage
-
-        Length length ->
-            CSS.Types.Length.toString length
+    | Value LengthPercentage
+    | LeftRelative LengthPercentage
+    | RightRelative LengthPercentage
 
 
 {-| -}
@@ -89,14 +72,14 @@ xToString x =
         Right ->
             "right"
 
-        Value v ->
-            valueToString v
+        Value lengthPercentage ->
+            LengthPercentage.toString lengthPercentage
 
-        LeftRelative v ->
-            "left " ++ valueToString v
+        LeftRelative lengthPercentage ->
+            "left " ++ LengthPercentage.toString lengthPercentage
 
-        RightRelative v ->
-            "right " ++ valueToString v
+        RightRelative lengthPercentage ->
+            "right " ++ LengthPercentage.toString lengthPercentage
 
 
 
@@ -118,7 +101,7 @@ right =
     property (xToString Right)
 
 
-value : Value -> Property
+value : LengthPercentage -> Property
 value =
     property << xToString << Value
 
@@ -127,12 +110,12 @@ value =
 -- SIDE-RELATIVE VALUES
 
 
-leftRelative : Value -> Property
+leftRelative : LengthPercentage -> Property
 leftRelative =
     property << xToString << LeftRelative
 
 
-rightRelative : Value -> Property
+rightRelative : LengthPercentage -> Property
 rightRelative =
     property << xToString << RightRelative
 

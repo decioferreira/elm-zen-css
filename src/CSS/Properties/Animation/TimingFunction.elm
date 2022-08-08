@@ -2,7 +2,7 @@ module CSS.Properties.Animation.TimingFunction exposing
     ( linear, ease, easeIn, easeOut, easeInOut, cubicBezier, stepStart, stepEnd, steps
     , multiple
     , inherit, initial, revert, revertLayer, unset
-    , EasingFunction(..), StepPosition(..), easingFunctionToString
+    , EasingFunction(..), easingFunctionToString, StepPosition(..)
     )
 
 {-| The animation-timing-function CSS property sets how an animation progresses through the duration
@@ -28,7 +28,7 @@ Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/animation-timing-functio
 
 # Types
 
-@docs EasingFunction, StepPosition, easingFunctionToString
+@docs EasingFunction, easingFunctionToString, StepPosition
 
 -}
 

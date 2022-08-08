@@ -1,6 +1,8 @@
 module CSS.Properties.Background.Attachment exposing
     ( scroll, fixed, local
+    , multiple
     , inherit, initial, revert, revertLayer, unset
+    , Attachment(..), toString
     )
 
 {-| The background-attachment CSS property sets whether a background image's position is fixed
@@ -14,14 +16,25 @@ Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/background-attachment>
 @docs scroll, fixed, local
 
 
+# Multiple background images
+
+@docs multiple
+
+
 # Global values
 
 @docs inherit, initial, revert, revertLayer, unset
+
+
+# Types
+
+@docs Attachment, toString
 
 -}
 
 import CSS.Internal exposing (Property)
 import CSS.Properties as Properties
+import List.Nonempty exposing (Nonempty)
 
 
 property : String -> Property
@@ -29,26 +42,71 @@ property =
     Properties.custom "background-attachment"
 
 
+{-| -}
+type Attachment
+    = Scroll
+    | Fixed
+    | Local
+
+
+{-| -}
+toString : Attachment -> String
+toString attachment =
+    case attachment of
+        Scroll ->
+            "scroll"
+
+        Fixed ->
+            "fixed"
+
+        Local ->
+            "local"
+
+
 
 -- KEYWORD VALUES
 
 
-{-| -}
+{-| The background is fixed relative to the element itself and does not scroll with its contents.
+(It is effectively attached to the element's border.)
+-}
 scroll : Property
 scroll =
-    property "scroll"
+    multiple (List.Nonempty.singleton Scroll)
 
 
-{-| -}
+{-| The background is fixed relative to the viewport. Even if an element has a scrolling mechanism,
+the background doesn't move with the element. (This is not compatible with background-clip: text.)
+-}
 fixed : Property
 fixed =
-    property "fixed"
+    multiple (List.Nonempty.singleton Fixed)
 
 
-{-| -}
+{-| The background is fixed relative to the element's contents. If the element has a scrolling
+mechanism, the background scrolls with the element's contents, and the background painting area and
+background positioning area are relative to the scrollable area of the element rather than to the
+border framing them.
+-}
 local : Property
 local =
-    property "local"
+    multiple (List.Nonempty.singleton Local)
+
+
+
+-- MULTIPLE BACKGROUND IMAGES
+
+
+{-| This property supports multiple background images. You can specify a different <attachment> for
+each background, separated by commas. Each image is matched with the corresponding <attachment>
+type, from first specified to last.
+-}
+multiple : Nonempty Attachment -> Property
+multiple =
+    List.Nonempty.toList
+        >> List.map toString
+        >> String.join ", "
+        >> property
 
 
 

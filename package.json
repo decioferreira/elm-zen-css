@@ -5,7 +5,7 @@
   "author": "Decio Ferreira <decio.jferreira@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "commander": "^9.1.0",
+    "commander": "^9.4.0",
     "elm": "^0.19.1-5",
     "node-watch": "^0.7.3",
     "temp-dir": "^2.0.0"

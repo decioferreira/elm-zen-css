@@ -33,8 +33,8 @@ type BlendMode
 
 {-| -}
 toString : BlendMode -> String
-toString time =
-    case time of
+toString blendMode =
+    case blendMode of
         Normal ->
             "normal"
 

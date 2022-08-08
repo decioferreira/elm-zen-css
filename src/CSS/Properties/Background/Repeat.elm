@@ -1,25 +1,19 @@
-module CSS.Properties.Background.Position.Y exposing
-    ( top, center, bottom, value
-    , bottomRelative
+module CSS.Properties.Background.Repeat exposing
+    ( repeatX, repeatY, singleValue, twoValue
     , multiple
     , inherit, initial, revert, revertLayer, unset
-    , Y(..)
+    , RepeatStyle(..), toString, Value(..)
     )
 
-{-| The `background-position-y` CSS property sets the initial vertical position for each background
-image. The position is relative to the position layer set by background-origin.
+{-| The `background-repeat` CSS property sets how background images are repeated. A background image
+can be repeated along the horizontal and vertical axes, or not repeated at all.
 
-Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/background-position-y>
-
-
-# Values
-
-@docs top, center, bottom, value
+Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/background-repeat>
 
 
-# Side-relative values
+# Keyword values
 
-@docs bottomRelative
+@docs repeatX, repeatY, singleValue, twoValue
 
 
 # Multiple values
@@ -34,81 +28,95 @@ Ref.: <https://developer.mozilla.org/en-US/docs/Web/CSS/background-position-y>
 
 # Types
 
-@docs Y
+@docs RepeatStyle, toString, Value
 
 -}
 
 import CSS.Internal exposing (Property)
 import CSS.Properties as Properties
-import CSS.Types.LengthPercentage as LengthPercentage exposing (LengthPercentage)
 import List.Nonempty exposing (Nonempty)
 
 
 property : String -> Property
 property =
-    Properties.custom "background-position-y"
+    Properties.custom "background-repeat"
 
 
 {-| -}
-type Y
-    = Top
-    | Center
-    | Bottom
-    | Value LengthPercentage
-    | BottomRelative LengthPercentage
+type RepeatStyle
+    = RepeatX
+    | RepeatY
+    | SingleValue Value
+    | TwoValue Value Value
 
 
 {-| -}
-yToString : Y -> String
-yToString y =
-    case y of
-        Top ->
-            "top"
-
-        Center ->
-            "center"
-
-        Bottom ->
-            "bottom"
-
-        Value lengthPercentage ->
-            LengthPercentage.toString lengthPercentage
-
-        BottomRelative lengthPercentage ->
-            "bottom " ++ LengthPercentage.toString lengthPercentage
+type Value
+    = Repeat
+    | Space
+    | Round
+    | NoRepeat
 
 
+{-| -}
+toString : RepeatStyle -> String
+toString repeatStyle =
+    case repeatStyle of
+        RepeatX ->
+            "repeat-x"
 
--- VALUES
+        RepeatY ->
+            "repeat-y"
 
+        SingleValue value ->
+            valueToString value
 
-top : Property
-top =
-    property (yToString Top)
-
-
-center : Property
-center =
-    property (yToString Center)
-
-
-bottom : Property
-bottom =
-    property (yToString Bottom)
+        TwoValue firstValue secondValue ->
+            valueToString firstValue ++ " " ++ valueToString secondValue
 
 
-value : LengthPercentage -> Property
-value =
-    property << yToString << Value
+valueToString : Value -> String
+valueToString value =
+    case value of
+        Repeat ->
+            "repeat"
+
+        Space ->
+            "space"
+
+        Round ->
+            "round"
+
+        NoRepeat ->
+            "no-repeat"
 
 
 
--- SIDE-RELATIVE VALUES
+-- KEYWORD VALUES
 
 
-bottomRelative : LengthPercentage -> Property
-bottomRelative =
-    property << yToString << BottomRelative
+{-| -}
+repeatX : Property
+repeatX =
+    multiple (List.Nonempty.singleton RepeatX)
+
+
+{-| -}
+repeatY : Property
+repeatY =
+    multiple (List.Nonempty.singleton RepeatY)
+
+
+{-| -}
+singleValue : Value -> Property
+singleValue value =
+    multiple (List.Nonempty.singleton (SingleValue value))
+
+
+{-| -}
+twoValue : Value -> Value -> Property
+twoValue firstValue secondValue =
+    multiple (List.Nonempty.singleton (TwoValue firstValue secondValue))
 
 
 
@@ -116,10 +124,10 @@ bottomRelative =
 
 
 {-| -}
-multiple : Nonempty Y -> Property
+multiple : Nonempty RepeatStyle -> Property
 multiple =
     List.Nonempty.toList
-        >> List.map yToString
+        >> List.map toString
         >> String.join ", "
         >> property
 
