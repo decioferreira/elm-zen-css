@@ -2,7 +2,7 @@ module CSS.Types.Length exposing
     ( Length(..), toString, ViewportSize(..)
     , zero
     , cap, ch, em, ex, ic, lh, rem, rlh
-    , vh, vmax, vmin, vb, vi
+    , vh, vw, vmax, vmin, vb, vi
     , px, cm, mm, q, inch, pc, pt
     )
 
